@@ -52,10 +52,14 @@ export default function GuestInvitation({ token, guest, event }: Props) {
         <header className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-[#0788df] via-[#35bdf2] to-[#e8f9ff] px-5 pb-8 pt-7 text-center shadow-xl sm:px-12">
           <div className="pointer-events-none absolute -right-10 top-12 h-36 w-36 rounded-full bg-white/25 blur-2xl" />
           <div className="pointer-events-none absolute -left-12 bottom-24 h-40 w-40 rounded-full border-[18px] border-white/20" />
-          <div className="relative flex items-center justify-between text-[10px] font-bold tracking-[.25em] text-white/90">
-            <span>HAPPY</span><img className="h-14 w-14 rounded-full bg-white/95 object-contain p-1 shadow-lg" src="/logo.svg" alt="Logo Trường Đại học Công nghiệp TP.HCM" /><span>GRADUATION</span>
+          <div className="relative grid grid-cols-[1fr_auto_1fr] items-center gap-3 text-[10px] font-bold tracking-[.25em] text-white/90 sm:gap-6 sm:text-xs">
+            <span className="text-left">HAPPY</span>
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white p-2 shadow-[0_8px_24px_rgba(7,95,157,.3)] sm:h-24 sm:w-24 sm:p-2.5">
+              <img className="h-full w-full object-contain" src="/logo.svg" alt="Logo Trường Đại học Công nghiệp TP.HCM" />
+            </div>
+            <span className="text-right">GRADUATION</span>
           </div>
-          <p className="relative mt-5 text-sm font-bold uppercase tracking-[.2em] text-white">Trân trọng kính mời</p>
+          <p className="relative mt-7 text-base font-bold uppercase tracking-[.22em] text-white sm:mt-8 sm:text-lg">Trân trọng kính mời</p>
           <div className="relative mx-auto mt-5 max-w-md rotate-[-1deg] rounded-[1.5rem] border-[10px] border-white bg-white/90 p-2 shadow-2xl">
             <div className="relative flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[1rem] bg-gradient-to-br from-[#bdeaff] via-white to-[#70cff5]">
               {event.photoUrl ? <img className="h-full w-full object-cover" src={event.photoUrl} alt={`Ảnh tốt nghiệp của ${event.graduate}`} /> : <div className="text-center text-[#0788df]"><div className="text-6xl">🎓</div><p className="mt-2 text-sm font-bold">Ảnh chân dung tốt nghiệp</p><p className="text-xs text-slate-500">Sẽ cập nhật sau</p></div>}
