@@ -1,7 +1,7 @@
 "use client";
 
 import Image, { type StaticImageData } from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { CalendarPlus, Check, CheckCircle2, Clock, Copy, Download, Info, Loader2, MapPin, Minus, Music, Navigation, Phone, Plus, Quote, VolumeX } from "lucide-react";
 import Countdown from "@/components/Countdown";
 import graduatePhoto from "@/public/graduate-photo.webp";
@@ -81,6 +81,7 @@ function DetailRow({ icon, label, children }: { icon: React.ReactNode; label: st
 export default function GuestInvitation({ token, guest, guestbook, event }: Props) {
   const recipient = `${guest.salutation} ${guest.name}`;
   const [opened, setOpened] = useState(false);
+  const [coverVisible, setCoverVisible] = useState(true);
   const [musicOn, setMusicOn] = useState(false);
   const [status, setStatus] = useState(guest.rsvp?.status || "");
   const [companions, setCompanions] = useState(Math.min(guest.rsvp?.companions || 0, guest.maxGuests));
@@ -93,22 +94,47 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
   const audioRef = useRef<HTMLAudioElement>(null);
   const firstStatusRef = useRef<HTMLInputElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
+  const coverCardRef = useRef<HTMLSpanElement>(null);
+  const coverCardBox = useRef<{ cx: number; cy: number; width: number; height: number } | null>(null);
   const rsvpRef = useRef<HTMLElement>(null);
   const photo = photoSource(event.photoUrl);
   const phoneHref = event.phone ? `tel:${event.phone.replace(/[^\d+]/g, "")}` : "";
 
+  // Opening: the invitation starts exactly where the cover's cream card sits, waits behind the doors as they swing away,
+  // then grows into place. Its size comes from offsetWidth/Height because the card's bounding box is skewed by its tilt.
+  useLayoutEffect(() => {
+    const box = coverCardBox.current;
+    if (!opened || !cardRef.current || !box || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const page = cardRef.current.getBoundingClientRect();
+    const scale = box.width / page.width;
+    const at = `translate(${box.cx - box.width / 2 - page.left}px, ${box.cy - box.height / 2 - page.top}px) scale(${scale})`;
+    const clip = `inset(0px 0px ${page.height - box.height / scale}px 0px round ${8 / scale}px)`;
+    const animation = cardRef.current.animate([
+      { transform: at, clipPath: clip },
+      { transform: at, clipPath: clip, offset: 0.57, easing: "cubic-bezier(.65,0,.35,1)" },
+      { transform: "none", clipPath: "inset(0px 0px 0px 0px round 32px)" },
+    ], { duration: 2100 });
+    return () => animation.cancel();
+  }, [opened]);
+
   // Scroll reveal: only sections still below the fold are hidden, then shown as they enter the viewport.
+  // It waits for the opening zoom to finish, since positions measured mid-zoom are scaled down.
   useEffect(() => {
     if (!opened || !cardRef.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const targets = Array.from(cardRef.current.querySelectorAll<HTMLElement>("[data-reveal]")).filter(el => el.getBoundingClientRect().top > window.innerHeight);
-    targets.forEach(el => { el.dataset.reveal = "pending"; });
-    const observer = new IntersectionObserver(entries => entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      (entry.target as HTMLElement).dataset.reveal = "shown";
-      observer.unobserve(entry.target);
-    }), { rootMargin: "0px 0px -10% 0px" });
-    targets.forEach(el => observer.observe(el));
-    return () => observer.disconnect();
+    const card = cardRef.current;
+    let observer: IntersectionObserver | undefined;
+    const timer = window.setTimeout(() => {
+      const targets = Array.from(card.querySelectorAll<HTMLElement>("[data-reveal]")).filter(el => el.getBoundingClientRect().top > window.innerHeight);
+      targets.forEach(el => { el.dataset.reveal = "pending"; });
+      const io = new IntersectionObserver(entries => entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        (entry.target as HTMLElement).dataset.reveal = "shown";
+        io.unobserve(entry.target);
+      }), { rootMargin: "0px 0px -10% 0px" });
+      targets.forEach(el => io.observe(el));
+      observer = io;
+    }, 2100);
+    return () => { window.clearTimeout(timer); observer?.disconnect(); };
   }, [opened]);
 
   // The sticky bar steps aside while the RSVP form itself is on screen.
@@ -119,8 +145,17 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
     return () => observer.disconnect();
   }, [opened]);
 
+  // The invitation mounts underneath while the cover splits into two doors; the cover unmounts once they have swung away.
   async function openInvitation() {
+    if (opened) return;
+    const card = coverCardRef.current;
+    if (card) {
+      const bounds = card.getBoundingClientRect();
+      coverCardBox.current = { cx: bounds.left + bounds.width / 2, cy: bounds.top + bounds.height / 2, width: card.offsetWidth, height: card.offsetHeight };
+    }
     setOpened(true);
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.setTimeout(() => setCoverVisible(false), reduceMotion ? 0 : 1400);
     if (audioRef.current) {
       try { await audioRef.current.play(); setMusicOn(true); } catch { setMusicOn(false); }
     }
@@ -159,14 +194,15 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
     }
   }
 
-  return <main className={`min-h-dvh bg-navy-deep px-3 py-3 text-cream sm:px-5 sm:py-8 ${opened ? "pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-8" : ""}`}>
-    <audio ref={audioRef} loop preload="none" src={event.musicUrl || undefined} aria-label="Nhạc nền lễ tốt nghiệp" />
-
-    {!opened && <section className="mx-auto flex min-h-[calc(100dvh-1.5rem)] max-w-[480px] items-stretch rounded-[2rem] border border-gold/50 bg-navy p-5 shadow-2xl sm:min-h-[680px]">
-      <button type="button" onClick={openInvitation} className={`relative flex w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[1.5rem] border border-gold/40 px-6 py-14 text-center ${focusRingDark}`}>
+  // The cover is drawn twice: one copy while closed, then each copy clipped to one half and swung open like a gatefold.
+  function cover(side: "left" | "right") {
+    const door = side === "left" ? "door-left" : "door-right absolute inset-0";
+    const hidden = side === "right" && !opened;
+    return <section aria-hidden={side === "right" || undefined}className={`flex min-h-[calc(100dvh-1.5rem)] items-stretch rounded-[2rem] border border-gold/50 bg-navy p-5 shadow-2xl sm:min-h-[680px] ${opened ? `door ${door}` : ""} ${hidden ? "invisible" : ""}`}>
+      <button type="button" onClick={openInvitation} disabled={opened} className={`relative flex w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[1.5rem] border border-gold/40 px-6 py-14 text-center ${focusRingDark}`}>
         <Laurels />
         <span className="relative font-display text-xl italic text-gold">Một lời mời trân trọng</span>
-        <span className="relative mx-auto mt-10 block w-full max-w-[310px] rotate-[-2deg] rounded-lg border border-gold bg-cream p-6 text-navy shadow-xl">
+        <span ref={side === "left" ? coverCardRef : undefined} className={`relative mx-auto mt-10 block w-full max-w-[310px] rounded-lg border border-gold bg-cream p-6 text-navy shadow-xl transition-transform duration-300 ease-out ${opened ? "rotate-0" : "rotate-[-2deg]"}`}>
           <span className="block border border-gold/60 px-4 py-10">
             <span className="block font-display text-lg">Thiệp mời tốt nghiệp</span>
             <span className="mt-6 block font-display text-3xl font-semibold leading-tight">{recipient}</span>
@@ -174,12 +210,23 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
             <span className="mt-5 block text-[13px] font-semibold uppercase tracking-[.18em] text-accent">{event.graduate}</span>
           </span>
         </span>
-        <span className="relative mt-12 inline-flex min-h-12 items-center rounded-full bg-gold px-10 text-base font-bold text-navy-deep">Mở thiệp</span>
-        <span className="relative mt-4 text-[13px] text-cream/75">Chạm vào thiệp để mở · nhạc nền có thể tắt</span>
+        <span className={`relative mt-12 inline-flex min-h-12 items-center rounded-full bg-gold px-10 text-base font-bold text-navy-deep transition-opacity duration-300 ${opened ? "opacity-0" : ""}`}>Mở thiệp</span>
+        <span className={`relative mt-4 text-[13px] text-cream/75 transition-opacity duration-300 ${opened ? "opacity-0" : ""}`}>Chạm vào thiệp để mở · nhạc nền có thể tắt</span>
       </button>
-    </section>}
+    </section>;
+  }
 
-    {opened && <div ref={cardRef} className="mx-auto w-full max-w-[480px] animate-fade-in overflow-hidden rounded-[2rem] border border-gold/50 bg-cream text-ink shadow-2xl md:max-w-3xl lg:max-w-6xl">
+  return <main className={`min-h-dvh bg-navy-deep px-3 py-3 text-cream sm:px-5 sm:py-8 ${opened ? "pb-[calc(6rem+env(safe-area-inset-bottom))] md:pb-8" : ""}`}>
+    <audio ref={audioRef} loop preload="none" src={event.musicUrl || undefined} aria-label="Nhạc nền lễ tốt nghiệp" />
+
+    {coverVisible && <div className={`fixed inset-0 z-50 overflow-y-auto px-3 py-3 transition-colors delay-300 duration-700 sm:px-5 sm:py-8 ${opened ? "pointer-events-none bg-transparent" : "bg-navy-deep"}`}>
+      <div className="relative mx-auto max-w-[480px] [perspective:1800px]">
+        {cover("left")}
+        {cover("right")}
+      </div>
+    </div>}
+
+    {opened && <div ref={cardRef} className="mx-auto w-full max-w-[480px] origin-top-left overflow-hidden rounded-[2rem] border border-gold/50 bg-cream text-ink shadow-2xl md:max-w-3xl lg:max-w-6xl">
       <header className="relative overflow-hidden bg-navy px-5 pb-8 pt-5 text-center text-cream md:px-12 md:pb-14 md:pt-10">
         <div className="lg:hidden"><Laurels /></div>
         <button type="button" onClick={toggleMusic} aria-label={musicOn ? "Tắt nhạc nền" : "Bật nhạc nền"} aria-pressed={musicOn} className={`absolute right-3 top-3 z-10 inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border border-gold/60 bg-navy/80 px-3 text-sm transition hover:bg-white/10 ${focusRingDark}`}>
