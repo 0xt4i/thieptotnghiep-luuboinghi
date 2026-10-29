@@ -109,8 +109,8 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
         <p className="relative mt-3 text-xs uppercase tracking-[.2em] text-white/70">Trường Đại học Công nghiệp TP.HCM · Khóa 20</p>
       </header>
 
-      <section className="relative px-6 py-10 md:px-16 md:py-14 lg:grid lg:grid-cols-[minmax(340px,420px)_minmax(0,1fr)] lg:items-center lg:gap-20 lg:px-24">
-        <div className="mx-auto w-full max-w-[290px] rotate-[-2deg] border-[10px] border-white bg-white p-2 shadow-xl lg:max-w-[420px]">
+      <section className="relative px-5 py-10 md:px-16 md:py-14 lg:grid lg:grid-cols-[minmax(460px,1.35fr)_minmax(0,.65fr)] lg:items-center lg:gap-16 lg:px-20">
+        <div className="mx-auto w-full max-w-[360px] rotate-[-2deg] border-[10px] border-white bg-white p-2 shadow-xl lg:max-w-[560px]">
           <div className="relative flex aspect-[4/5] items-center justify-center overflow-hidden bg-[#dce7ed]">{event.photoUrl ? <Image src={event.photoUrl} alt={`Ảnh tốt nghiệp của ${event.graduate}`} fill sizes="290px" className="object-cover" unoptimized /> : <svg aria-label="Khung ảnh chân dung tốt nghiệp" className="h-40 w-40 text-[#0b2545]/50" viewBox="0 0 160 160" fill="none"><circle cx="80" cy="58" r="25" stroke="currentColor" strokeWidth="2" /><path d="M35 135c7-31 22-46 45-46s38 15 45 46M48 43l32-20 32 20-32 19-32-19Zm32 19v18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M27 137h106" stroke="#c9a227" strokeWidth="2" /></svg>}</div>
           <p className="py-2 text-center font-display text-sm italic text-[#0b2545]">A new chapter begins</p>
         </div>
