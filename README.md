@@ -6,9 +6,10 @@
 
 1. Cài Node.js 20+, tạo `.env` từ `.env.example` và đổi `ADMIN_PASSWORD`, `SESSION_SECRET`.
 2. Cài dependencies: `npm install`.
-3. Tạo database: `npx prisma migrate dev --name init`.
-4. Tạo 20 khách mẫu và in link: `npm run seed`.
-5. Chạy: `npm run dev`, mở `http://localhost:3000/admin`.
+3. Đặt `DATABASE_URL` bằng Supabase transaction pooler (port `6543`) và `DIRECT_URL` bằng session pooler (port `5432`) trong `.env`.
+4. Tạo database: `npx prisma migrate deploy`.
+5. Tạo 20 khách mẫu và in link: `npm run seed`.
+6. Chạy: `npm run dev`, mở `http://localhost:3000/admin`.
 
 File [sample-guests.csv](./prisma/sample-guests.csv) có đúng 20 dòng và có thể thay bằng CSV riêng. Token được tạo bằng `crypto.randomBytes(12)` (URL-safe, 16 ký tự trở lên), không dùng ID tuần tự.
 
@@ -22,7 +23,7 @@ File [sample-guests.csv](./prisma/sample-guests.csv) có đúng 20 dòng và có
 
 1. Đẩy mã lên GitHub và import project vào Vercel.
 2. Thêm toàn bộ biến trong `.env.example` tại Project Settings > Environment Variables.
-3. Dùng Supabase Postgres cho production: đổi `provider = "postgresql"` trong `prisma/schema.prisma`, đặt `DATABASE_URL` là connection string Supabase, chạy `npx prisma migrate deploy` trong bước build hoặc trước deploy.
+3. Dùng Supabase Postgres cho production: đặt `DATABASE_URL` là transaction pooler port `6543` và `DIRECT_URL` là session pooler port `5432`. Migration dùng `DIRECT_URL`; runtime dùng `DATABASE_URL`.
 4. Build command là `npm run build`; start command mặc định của Vercel.
 5. Sau deploy, chạy seed một lần từ máy có `DATABASE_URL` production: `npm run seed`; lưu lại link được in ra để gửi khách.
 
