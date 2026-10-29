@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root { color-scheme: light; }
+body { background: #fbf7ef; color: #263238; }
+* { box-sizing: border-box; }
+.paper { background: rgba(255,255,255,.82); border: 1px solid rgba(211,168,79,.35); box-shadow: 0 18px 60px rgba(17,37,63,.12); }
+.gold-line { background: linear-gradient(90deg, transparent, #d3a84f, transparent); height: 1px; }

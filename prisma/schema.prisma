@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+datasource db {
+  provider = "sqlite"
+  url = env("DATABASE_URL")
+}
+
+model Guest {
+  id            String   @id @default(cuid())
+  token         String   @unique
+  name          String
+  salutation    String
+  group         String
+  contact       String?
+  maxGuests     Int      @default(0)
+  personalNote  String?
+  createdAt     DateTime @default(now())
+  rsvp          Rsvp?
+}
+
+model Rsvp {
+  id         String   @id @default(cuid())
+  guestId    String   @unique
+  status     String
+  companions Int      @default(0)
+  message    String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  guest      Guest    @relation(fields: [guestId], references: [id], onDelete: Cascade)
+}

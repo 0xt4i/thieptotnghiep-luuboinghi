@@ -1,0 +1,3 @@
+import Link from "next/link";
+import { event } from "@/lib/event";
+export default function Home() { return <main className="min-h-screen flex items-center justify-center p-6"><section className="paper max-w-xl rounded-3xl p-8 text-center"><div className="text-5xl">🎓</div><p className="mt-5 uppercase tracking-[.25em] text-xs text-gold">Graduation day</p><h1 className="mt-3 font-display text-4xl text-navy">{event.name}</h1><p className="mt-4 text-slate-600">Thiệp mời được cá nhân hóa. Vui lòng mở đường link riêng được gửi đến bạn.</p><Link className="mt-7 inline-block rounded-full bg-navy px-6 py-3 font-semibold text-white" href="/admin">Trang quản trị</Link></section></main>; }
