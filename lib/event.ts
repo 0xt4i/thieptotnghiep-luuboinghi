@@ -9,7 +9,7 @@ export const event = {
   notes: process.env.EVENT_NOTES || "Trang phục lịch sự; vui lòng đến trước 15 phút để chụp ảnh lưu niệm.",
   phone: process.env.GRADUATE_PHONE || "03989898989",
   photoUrl: process.env.GRADUATE_PHOTO_URL || "",
-  musicUrl: process.env.GRADUATION_MUSIC_URL || "",
+  musicUrl: process.env.GRADUATION_MUSIC_URL || "/graduation-music.mp3",
 };
 export function formatDate(value: string | Date) { return new Intl.DateTimeFormat("vi-VN", { dateStyle: "full", timeStyle: "short", timeZone: "Asia/Ho_Chi_Minh" }).format(new Date(value)); }
 export function isPastDeadline() { return Date.now() > new Date(event.deadline).getTime(); }
