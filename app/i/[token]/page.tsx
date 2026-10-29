@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: { token: string } }) {
   const guest = await db.guest.findUnique({ where: { token: params.token }, select: { name: true, salutation: true } });
   const title = guest ? `Thiệp mời gửi ${guest.salutation} ${guest.name} | ${event.graduate}` : "Thiệp mời tốt nghiệp";
-  return { title, description: guest ? `Lời mời thân gửi ${guest.salutation} ${guest.name} đến dự lễ tốt nghiệp của ${event.graduate}.` : `Lời mời tham dự ${event.name}`, openGraph: { title, description: `Lễ tốt nghiệp của ${event.graduate}`, type: "website" as const } };
+  return { title, description: guest ? `Lời mời thân gửi ${guest.salutation} ${guest.name} đến dự lễ tốt nghiệp của ${event.graduate}.` : `Lời mời tham dự ${event.name}`, openGraph: { title, description: `Lễ tốt nghiệp của ${event.graduate}`, type: "website" as const, images: [{ url: `/i/${params.token}/opengraph-image`, width: 1200, height: 630, alt: title }] } };
 }
 export default async function InvitationPage({ params }: { params: { token: string } }) {
   const guest = await db.guest.findUnique({ where: { token: params.token }, include: { rsvp: true } });
