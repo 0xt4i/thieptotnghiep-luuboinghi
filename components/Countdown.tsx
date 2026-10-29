@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from "react";
 
-const units = [["Ngày", 86400], ["Giờ", 3600], ["Phút", 60], ["Giây", 1]] as const;
-const wraps: Record<string, number> = { Ngày: Infinity, Giờ: 24, Phút: 60, Giây: 60 };
+const units = [["Ngày", 86400, Infinity], ["Giờ", 3600, 24], ["Phút", 60, 60], ["Giây", 1, 60]] as const;
 
 // Time is read only after mount so server and client render the same markup.
-export default function Countdown({ date, graduate }: { date: string; graduate: string }) {
+export default function Countdown({ date, graduate, recipient }: { date: string; graduate: string; recipient: string }) {
   const [remaining, setRemaining] = useState<number | null>(null);
 
   useEffect(() => {
@@ -17,15 +16,15 @@ export default function Countdown({ date, graduate }: { date: string; graduate: 
     return () => window.clearInterval(timer);
   }, [date]);
 
-  if (remaining === 0) return <p className="font-display text-xl text-[#c9a227]">Cảm ơn bạn đã đến chung vui cùng {graduate}.</p>;
+  if (remaining === 0) return <p className="font-display text-2xl italic text-gold">Cảm ơn {recipient} đã đến chung vui cùng {graduate}.</p>;
 
   const seconds = remaining === null ? null : Math.floor(remaining / 1000);
   return <>
-    <p className="text-xs uppercase tracking-[.25em] text-[#c9a227]">Hẹn gặp bạn vào ngày vui</p>
-    <div className="mt-5 grid grid-cols-4 gap-2" aria-label="Thời gian còn lại đến ngày lễ">
-      {units.map(([label, size]) => <div key={label} className="rounded-lg border border-[#c9a227]/40 px-1 py-3">
-        <strong className="block font-display text-2xl tabular-nums text-[#c9a227]">{seconds === null ? "--" : String(Math.floor(seconds / size) % wraps[label]).padStart(2, "0")}</strong>
-        <span className="text-[10px] uppercase tracking-wider text-white/60">{label}</span>
+    <p className="font-display text-xl italic text-gold">Hẹn gặp {recipient} vào ngày vui</p>
+    <div className="mx-auto mt-5 grid max-w-md grid-cols-4 gap-2" role="timer" aria-label="Thời gian còn lại đến ngày lễ">
+      {units.map(([label, size, wrap]) => <div key={label} className="rounded-xl border border-gold/40 px-1 py-3">
+        <strong className="block font-display text-3xl font-semibold tabular-nums text-gold">{seconds === null ? "--" : String(Math.floor(seconds / size) % wrap).padStart(2, "0")}</strong>
+        <span className="text-[13px] text-cream/80">{label}</span>
       </div>)}
     </div>
   </>;

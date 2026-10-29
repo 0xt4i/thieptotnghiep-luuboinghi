@@ -2,12 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 :root { color-scheme: light; }
-body { background: #fbf7ef; color: #263238; }
+body { background: #f8f3e8; color: #0f172a; }
 * { box-sizing: border-box; }
-.paper { background: rgba(255,255,255,.82); border: 1px solid rgba(211,168,79,.35); box-shadow: 0 18px 60px rgba(17,37,63,.12); }
-.gold-line { background: linear-gradient(90deg, transparent, #d3a84f, transparent); height: 1px; }
-@keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-.animate-fade-in { animation: fade-in .7s ease-out both; }
+.paper { background: rgba(255,255,255,.82); border: 1px solid rgba(201,162,39,.35); box-shadow: 0 18px 60px rgba(11,37,69,.12); }
+.gold-line { background: linear-gradient(90deg, transparent, #c9a227, transparent); height: 1px; }
+@keyframes fade-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fade-in { animation: fade-in .4s ease-out both; }
+/* Scroll reveal: elements only start hidden once JS has marked them, so content never depends on JS to appear. */
+[data-reveal="pending"] { opacity: 0; transform: translateY(12px); }
+[data-reveal="shown"] { opacity: 1; transform: none; transition: opacity .35s ease-out, transform .35s ease-out; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
 }

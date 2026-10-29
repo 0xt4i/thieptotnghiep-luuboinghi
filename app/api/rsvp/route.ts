@@ -7,7 +7,7 @@ const attempts = new Map<string, { count: number; time: number }>();
 export async function POST(request: Request) {
   const ip = request.headers.get("x-forwarded-for") || "unknown";
   const now = Date.now(); const prior = attempts.get(ip);
-  if (prior && now - prior.time < 60_000 && prior.count >= 10) return NextResponse.json({ error: "Bạn thao tác quá nhanh, vui lòng thử lại sau." }, { status: 429 });
+  if (prior && now - prior.time < 60_000 && prior.count >= 10) return NextResponse.json({ error: "Thao tác quá nhanh, vui lòng thử lại sau ít phút." }, { status: 429 });
   attempts.set(ip, { count: prior && now - prior.time < 60_000 ? prior.count + 1 : 1, time: now });
   const body = await request.json().catch(() => null); const token = typeof body?.token === "string" ? body.token : "";
   const guest = await db.guest.findUnique({ where: { token } });
