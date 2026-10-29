@@ -5,10 +5,11 @@ export const event = {
   venue: process.env.EVENT_VENUE || "Trường Đại học Công nghiệp TP.HCM",
   address: process.env.EVENT_ADDRESS || "12 Nguyễn Văn Bảo, phường 4, quận Gò Vấp, TP. Hồ Chí Minh",
   mapsUrl: process.env.EVENT_MAPS_URL || "https://maps.google.com/?q=Trường+Đại+học+Công+nghiệp+TP.HCM",
-  deadline: process.env.RSVP_DEADLINE || "2026-10-25T23:59:59+07:00",
+  deadline: process.env.RSVP_DEADLINE || "2026-10-30T23:59:59+07:00",
   notes: process.env.EVENT_NOTES || "Trang phục lịch sự; vui lòng đến trước 15 phút để chụp ảnh lưu niệm.",
   phone: process.env.GRADUATE_PHONE || "03989898989",
   photoUrl: process.env.GRADUATE_PHOTO_URL || "",
+  musicUrl: process.env.GRADUATION_MUSIC_URL || "",
 };
 export function formatDate(value: string | Date) { return new Intl.DateTimeFormat("vi-VN", { dateStyle: "full", timeStyle: "short", timeZone: "Asia/Ho_Chi_Minh" }).format(new Date(value)); }
 export function isPastDeadline() { return Date.now() > new Date(event.deadline).getTime(); }

@@ -6,3 +6,8 @@ body { background: #fbf7ef; color: #263238; }
 * { box-sizing: border-box; }
 .paper { background: rgba(255,255,255,.82); border: 1px solid rgba(211,168,79,.35); box-shadow: 0 18px 60px rgba(17,37,63,.12); }
 .gold-line { background: linear-gradient(90deg, transparent, #d3a84f, transparent); height: 1px; }
+@keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.animate-fade-in { animation: fade-in .7s ease-out both; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
