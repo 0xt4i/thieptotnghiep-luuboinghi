@@ -101,7 +101,7 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
   const phoneHref = event.phone ? `tel:${event.phone.replace(/[^\d+]/g, "")}` : "";
 
   // Opening: the invitation starts exactly over the cover frame (same edges and corner radius), waits behind the doors
-  // as they swing away, then grows into place.
+  // as they swing away, coming into focus from a blur, then grows into place.
   useLayoutEffect(() => {
     const box = coverFrameBox.current;
     if (!opened || !cardRef.current || !box || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -109,10 +109,13 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
     const scale = box.width / page.width;
     const at = `translate(${box.cx - box.width / 2 - page.left}px, ${box.cy - box.height / 2 - page.top}px) scale(${scale})`;
     const clip = `inset(0px 0px ${page.height - box.height / scale}px 0px round ${32 / scale}px)`;
+    // The blur is applied before the scale, so divide it to keep the on-screen softness the same at any page width.
+    const blurred = `blur(${10 / scale}px)`;
     const animation = cardRef.current.animate([
-      { transform: at, clipPath: clip },
-      { transform: at, clipPath: clip, offset: 0.57, easing: "cubic-bezier(.65,0,.35,1)" },
-      { transform: "none", clipPath: "inset(0px 0px 0px 0px round 32px)" },
+      { transform: at, clipPath: clip, filter: blurred, opacity: 0.35 },
+      { transform: at, clipPath: clip, filter: blurred, opacity: 0.35, offset: 0.17, easing: "ease-out" },
+      { transform: at, clipPath: clip, filter: "blur(0px)", opacity: 1, offset: 0.57, easing: "cubic-bezier(.65,0,.35,1)" },
+      { transform: "none", clipPath: "inset(0px 0px 0px 0px round 32px)", filter: "blur(0px)", opacity: 1 },
     ], { duration: 2100 });
     return () => animation.cancel();
   }, [opened]);
