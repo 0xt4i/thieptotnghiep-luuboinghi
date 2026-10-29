@@ -94,21 +94,21 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
   const audioRef = useRef<HTMLAudioElement>(null);
   const firstStatusRef = useRef<HTMLInputElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
-  const coverCardRef = useRef<HTMLSpanElement>(null);
-  const coverCardBox = useRef<{ cx: number; cy: number; width: number; height: number } | null>(null);
+  const coverFrameRef = useRef<HTMLElement>(null);
+  const coverFrameBox = useRef<{ cx: number; cy: number; width: number; height: number } | null>(null);
   const rsvpRef = useRef<HTMLElement>(null);
   const photo = photoSource(event.photoUrl);
   const phoneHref = event.phone ? `tel:${event.phone.replace(/[^\d+]/g, "")}` : "";
 
-  // Opening: the invitation starts exactly where the cover's cream card sits, waits behind the doors as they swing away,
-  // then grows into place. Its size comes from offsetWidth/Height because the card's bounding box is skewed by its tilt.
+  // Opening: the invitation starts exactly over the cover frame (same edges and corner radius), waits behind the doors
+  // as they swing away, then grows into place.
   useLayoutEffect(() => {
-    const box = coverCardBox.current;
+    const box = coverFrameBox.current;
     if (!opened || !cardRef.current || !box || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const page = cardRef.current.getBoundingClientRect();
     const scale = box.width / page.width;
     const at = `translate(${box.cx - box.width / 2 - page.left}px, ${box.cy - box.height / 2 - page.top}px) scale(${scale})`;
-    const clip = `inset(0px 0px ${page.height - box.height / scale}px 0px round ${8 / scale}px)`;
+    const clip = `inset(0px 0px ${page.height - box.height / scale}px 0px round ${32 / scale}px)`;
     const animation = cardRef.current.animate([
       { transform: at, clipPath: clip },
       { transform: at, clipPath: clip, offset: 0.57, easing: "cubic-bezier(.65,0,.35,1)" },
@@ -148,11 +148,8 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
   // The invitation mounts underneath while the cover splits into two doors; the cover unmounts once they have swung away.
   async function openInvitation() {
     if (opened) return;
-    const card = coverCardRef.current;
-    if (card) {
-      const bounds = card.getBoundingClientRect();
-      coverCardBox.current = { cx: bounds.left + bounds.width / 2, cy: bounds.top + bounds.height / 2, width: card.offsetWidth, height: card.offsetHeight };
-    }
+    const frame = coverFrameRef.current?.getBoundingClientRect();
+    if (frame) coverFrameBox.current = { cx: frame.left + frame.width / 2, cy: frame.top + frame.height / 2, width: frame.width, height: frame.height };
     setOpened(true);
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.setTimeout(() => setCoverVisible(false), reduceMotion ? 0 : 1400);
@@ -198,11 +195,11 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
   function cover(side: "left" | "right") {
     const door = side === "left" ? "door-left" : "door-right absolute inset-0";
     const hidden = side === "right" && !opened;
-    return <section aria-hidden={side === "right" || undefined}className={`flex min-h-[calc(100dvh-1.5rem)] items-stretch rounded-[2rem] border border-gold/50 bg-navy p-5 shadow-2xl sm:min-h-[680px] ${opened ? `door ${door}` : ""} ${hidden ? "invisible" : ""}`}>
+    return <section ref={side === "left" ? coverFrameRef : undefined} aria-hidden={side === "right" || undefined}className={`flex min-h-[calc(100dvh-1.5rem)] items-stretch rounded-[2rem] border border-gold/50 bg-navy p-5 shadow-2xl sm:min-h-[680px] ${opened ? `door ${door}` : ""} ${hidden ? "invisible" : ""}`}>
       <button type="button" onClick={openInvitation} disabled={opened} className={`relative flex w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[1.5rem] border border-gold/40 px-6 py-14 text-center ${focusRingDark}`}>
         <Laurels />
         <span className="relative font-display text-xl italic text-gold">Một lời mời trân trọng</span>
-        <span ref={side === "left" ? coverCardRef : undefined} className={`relative mx-auto mt-10 block w-full max-w-[310px] rounded-lg border border-gold bg-cream p-6 text-navy shadow-xl transition-transform duration-300 ease-out ${opened ? "rotate-0" : "rotate-[-2deg]"}`}>
+        <span className={`relative mx-auto mt-10 block w-full max-w-[310px] rounded-lg border border-gold bg-cream p-6 text-navy shadow-xl transition-transform duration-300 ease-out ${opened ? "rotate-0" : "rotate-[-2deg]"}`}>
           <span className="block border border-gold/60 px-4 py-10">
             <span className="block font-display text-lg">Thiệp mời tốt nghiệp</span>
             <span className="mt-6 block font-display text-3xl font-semibold leading-tight">{recipient}</span>
