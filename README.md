@@ -35,6 +35,7 @@ File [guests-upload-template.csv](./prisma/guests-upload-template.csv) là mẫu
 - Admin dashboard hỗ trợ nhập CSV theo mẫu, giữ nguyên token khi cập nhật contact, và copy link/tin nhắn mời cho từng khách.
 - `NEXT_PUBLIC_SITE_URL` là domain gốc dùng để tạo link mời và link trong CSV export; đặt domain Vercel production ở Vercel, còn local có thể dùng `http://localhost:3000`.
 - Logo trường được đặt tại `public/logo.svg` và hiển thị trên đầu thiệp; thay file này nếu muốn dùng phiên bản logo khác.
+- Khung ảnh nhân vật chính đã có sẵn; đặt URL ảnh tốt nghiệp vào `GRADUATE_PHOTO_URL` để thay placeholder mà không cần sửa code.
 - `POST /api/rsvp`: Zod validation, upsert theo `guestId`, giới hạn companion và rate limit IP.
 
 ## Checklist
