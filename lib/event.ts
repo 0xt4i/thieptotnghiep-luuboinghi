@@ -1,11 +1,11 @@
 export const event = {
   name: process.env.EVENT_NAME || "Lễ tốt nghiệp của Lưu Bội Nghi",
   graduate: process.env.GRADUATE_NAME || "Lưu Bội Nghi",
-  date: process.env.EVENT_DATE || "2026-10-31T08:00:00+07:00",
+  date: process.env.EVENT_DATE || "2026-11-22T08:00:00+07:00",
   venue: process.env.EVENT_VENUE || "Trường Đại học Công nghiệp TP.HCM",
   address: process.env.EVENT_ADDRESS || "12 Nguyễn Văn Bảo, phường 4, quận Gò Vấp, TP. Hồ Chí Minh",
   mapsUrl: process.env.EVENT_MAPS_URL || "https://maps.google.com/?q=Trường+Đại+học+Công+nghiệp+TP.HCM",
-  deadline: process.env.RSVP_DEADLINE || "2026-10-30T23:59:59+07:00",
+  deadline: process.env.RSVP_DEADLINE || "2026-11-21T23:59:59+07:00",
   notes: process.env.EVENT_NOTES || "Trang phục lịch sự; vui lòng đến trước 15 phút để chụp ảnh lưu niệm.",
   phone: process.env.GRADUATE_PHONE || "03989898989",
   photoUrl: process.env.GRADUATE_PHOTO_URL || "/graduate-photo.webp",
