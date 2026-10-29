@@ -11,7 +11,7 @@
 5. Tạo 20 khách mẫu và in link: `npm run seed`.
 6. Chạy: `npm run dev`, mở `http://localhost:3000/admin`.
 
-File [sample-guests.csv](./prisma/sample-guests.csv) có đúng 20 dòng và có thể thay bằng CSV riêng. Token được tạo bằng `crypto.randomBytes(12)` (URL-safe, 16 ký tự trở lên), không dùng ID tuần tự.
+File [guests-upload-template.csv](./prisma/guests-upload-template.csv) là mẫu 20 dòng để tải lên dashboard; [sample-guests.csv](./prisma/sample-guests.csv) được dùng cho seed local. Token được tạo bằng `crypto.randomBytes(12)` (URL-safe, 16 ký tự trở lên), không dùng ID tuần tự.
 
 ## Thông báo
 
