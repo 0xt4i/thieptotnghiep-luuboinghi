@@ -22,7 +22,7 @@ CREATE TABLE "Rsvp" (
     "status" TEXT NOT NULL,
     "companions" INTEGER NOT NULL DEFAULT 0,
     "message" TEXT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     CONSTRAINT "Rsvp_pkey" PRIMARY KEY ("id")
 );
