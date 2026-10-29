@@ -33,6 +33,7 @@ File [sample-guests.csv](./prisma/sample-guests.csv) có đúng 20 dòng và có
 - `/admin`: đăng nhập quản trị.
 - `/admin/dashboard`: thống kê, danh sách, QR, link và xuất CSV UTF-8 BOM.
 - Admin dashboard hỗ trợ nhập CSV theo mẫu, giữ nguyên token khi cập nhật contact, và copy link/tin nhắn mời cho từng khách.
+- `NEXT_PUBLIC_SITE_URL` là domain gốc dùng để tạo link mời và link trong CSV export; đặt domain Vercel production ở Vercel, còn local có thể dùng `http://localhost:3000`.
 - `POST /api/rsvp`: Zod validation, upsert theo `guestId`, giới hạn companion và rate limit IP.
 
 ## Checklist
