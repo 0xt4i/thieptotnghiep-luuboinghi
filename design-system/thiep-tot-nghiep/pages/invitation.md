@@ -1,43 +1,43 @@
-# Invitation Page Overrides — `/i/[token]`
+# Quy tắc riêng cho trang thiệp — `/i/[token]`
 
-> **PROJECT:** Thiep Tot Nghiep
-> **Files:** `app/i/[token]/page.tsx`, `app/i/[token]/opengraph-image.tsx`, `components/GuestInvitation.tsx`
-> Rules here **override** `../MASTER.md`. Route and data model must not change.
+> **DỰ ÁN:** Thiệp Tốt Nghiệp
+> **File:** `app/i/[token]/page.tsx`, `app/i/[token]/opengraph-image.tsx`, `components/GuestInvitation.tsx`
+> Quy tắc ở đây **ghi đè** `../MASTER.md`. Không thay đổi route và mô hình dữ liệu.
 
 ---
 
-## Context
+## Bối cảnh
 
-- Opened from Zalo / Messenger in-app webviews on phones, often 4G
-- Audience includes elders → formal Vietnamese register, large readable text
+- Khách mở thiệp từ trình duyệt trong Zalo / Messenger trên điện thoại, thường dùng 4G
+- Khách có cả người lớn tuổi → lời lẽ trang trọng, chữ lớn dễ đọc
 
-## Layout
+## Bố cục
 
-- Single card, `max-w-[480px]` on mobile, widening on md/lg
-- **Gate ("Mở thiệp"):** kept, one tap opens the invitation (and starts optional music)
-- **Hero (first screen):** university logo (clearly legible) → polaroid portrait (`priority`) → "Trân trọng kính mời" → salutation + guest name → graduate name → date/time + venue
-- **Personal note:** oversized italic EB Garamond pull quote (Editorial style), accent rule on the left
-- Bottom padding accounts for the sticky bar height + `env(safe-area-inset-bottom)`
+- Một tấm thiệp duy nhất, `max-w-[480px]` trên điện thoại, rộng dần ở md/lg
+- **Bìa ("Mở thiệp"):** giữ lại, một chạm là mở thiệp (và bật nhạc nếu có)
+- **Phần mở đầu (màn hình đầu tiên):** logo trường (rõ ràng, dễ đọc) → ảnh chân dung polaroid (`priority`) → "Trân trọng kính mời" → danh xưng + tên khách → tên người tốt nghiệp → ngày giờ + địa điểm
+- **Lời nhắn riêng:** câu trích dẫn EB Garamond in nghiêng cỡ lớn (phong cách Editorial), có đường kẻ màu `accent` bên trái
+- Padding dưới đáy tính cả chiều cao thanh cố định + `env(safe-area-inset-bottom)`
 
-## Copy rules
+## Quy tắc câu chữ
 
-- Always address the guest as `{salutation} {name}`; never "bạn"
-- Vietnamese only (no "A new chapter begins")
-- Guestbook shows messages only, never guest names
+- Luôn gọi khách bằng `{danh xưng} {tên}`; không bao giờ dùng "bạn"
+- Chỉ dùng tiếng Việt (không viết kiểu "A new chapter begins")
+- Sổ lưu bút chỉ hiện lời chúc, không bao giờ hiện tên khách
 
-## Mobile / in-app browser rules
+## Quy tắc cho điện thoại / trình duyệt trong ứng dụng
 
-- Sticky bottom bar: **Xác nhận tham dự** (primary) · **Chỉ đường** · **Gọi** (`tel:` event.phone); hidden while the RSVP section is in view
-- Calendar: Google Calendar link is primary, `.ics` secondary
-- "Sao chép địa chỉ" button with copied feedback
-- Music: only after the user taps; toggle button ≥ 44px with `aria-label`
+- Thanh cố định dưới đáy: **Xác nhận tham dự** (nút chính) · **Chỉ đường** · **Gọi** (`tel:` event.phone); ẩn đi khi section RSVP đang hiện trên màn hình
+- Lịch: link Google Calendar là chính, file `.ics` là phụ
+- Nút "Sao chép địa chỉ" có phản hồi đã sao chép
+- Nhạc: chỉ phát sau khi khách chạm; nút bật/tắt ≥ 44px, có `aria-label`
 
-## RSVP form
+## Form RSVP
 
-- No default status; submit disabled until a status is chosen
-- Pending: button disabled + spinner; network errors caught and shown inline (`role="alert"`)
-- Success: confirmation + Google Calendar button (when attending)
+- Không chọn sẵn trạng thái; chỉ gửi được khi đã chọn một trạng thái
+- Đang gửi: nút bị vô hiệu hoá + vòng xoay; lỗi mạng được bắt và hiện ngay trong form (`role="alert"`)
+- Gửi thành công: hiện xác nhận + nút Google Calendar (khi chọn tham dự)
 
-## OG image
+## Ảnh OG
 
-- Be Vietnam Pro loaded into `next/og`; guest salutation + name in the image; `<title>` < 60 chars
+- Nạp phông Be Vietnam Pro vào `next/og`; ảnh có danh xưng + tên khách; `<title>` dưới 60 ký tự
