@@ -204,7 +204,7 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
               <Image src="/logo.svg" alt="" width={240} height={86} className="h-full w-full object-contain" />
             </div>
             <p className="mt-4 font-display text-xl italic text-gold lg:mt-10">Trân trọng kính mời</p>
-            <h1 className="mt-1 font-display text-[2.125rem] font-semibold leading-[1.1] md:text-5xl lg:text-6xl">{recipient}</h1>
+            <h1 className="mt-1 font-sans text-[2.125rem] font-semibold leading-[1.1] tracking-[-.02em] md:text-5xl lg:text-6xl">{recipient}</h1>
             <p className="mt-3 text-base text-cream/85 lg:text-lg">đến chung vui trong ngày tốt nghiệp của</p>
             <h2 className="mt-1 font-display text-3xl font-semibold text-gold md:text-4xl">{event.graduate}</h2>
             <p className="mt-2 text-[13px] text-cream/75 max-[379px]:hidden">Trường Đại học Công nghiệp TP.HCM · Khóa 20</p>

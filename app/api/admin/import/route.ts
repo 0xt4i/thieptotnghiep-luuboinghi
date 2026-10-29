@@ -12,7 +12,9 @@ export async function POST(request: Request) {
   try {
     const guests = parseGuestsCsv(await file.text());
     for (const guest of guests) {
-      const existing = guest.contact ? await db.guest.findFirst({ where: { contact: guest.contact } }) : null;
+      const existing = guest.contact
+        ? await db.guest.findFirst({ where: { contact: guest.contact, name: guest.name } })
+        : null;
       if (existing) {
         await db.guest.update({ where: { id: existing.id }, data: guest });
       } else {
