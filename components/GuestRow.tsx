@@ -46,7 +46,7 @@ export default function GuestRow({ guest, link, qr, index }: { guest: Guest; lin
   }
 
   return <>
-    <tr className="border-b border-slate-100 align-top">
+    <tr className={`border-b border-slate-100 align-top ${guest.salutation === "Chưa bổ sung" ? "bg-red-50" : ""}`}>
       <td className="px-4 py-4 text-center font-semibold text-slate-500">{index + 1}</td>
       <td className="px-4 py-4 font-semibold">{guest.salutation} {guest.name}<div className="mt-1 text-xs font-normal text-slate-500">{guest.contact || "Chưa có liên hệ"}</div></td>
       <td className="px-4 py-4">{guest.group}</td>

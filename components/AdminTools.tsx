@@ -5,15 +5,26 @@ import { useState } from "react";
 export default function AdminTools() {
   const [message, setMessage] = useState("");
   const [addMessage, setAddMessage] = useState("");
+  const [importing, setImporting] = useState(false);
   async function importCsv(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (importing) return;
     const form = event.currentTarget;
-    const response = await fetch("/api/admin/import", { method: "POST", body: new FormData(form) });
-    const result = await response.json();
-    setMessage(response.ok ? `Đã nhập ${result.count} khách. Đang tải lại danh sách...` : result.error);
-    if (response.ok) {
-      form.reset();
-      window.setTimeout(() => window.location.reload(), 500);
+    setImporting(true);
+    setMessage("Đang nhận file và nhập danh sách khách...");
+    try {
+      const response = await fetch("/api/admin/import", { method: "POST", body: new FormData(form) });
+      const result = await response.json();
+      setMessage(response.ok ? `Đã nhập ${result.count} khách. Đang tải lại danh sách...` : result.error);
+      if (response.ok) {
+        form.reset();
+        window.setTimeout(() => window.location.reload(), 500);
+      } else {
+        setImporting(false);
+      }
+    } catch {
+      setMessage("Không thể nhập CSV. Vui lòng thử lại.");
+      setImporting(false);
     }
   }
   async function addGuest(event: React.FormEvent<HTMLFormElement>) {
@@ -38,5 +49,5 @@ export default function AdminTools() {
       window.setTimeout(() => window.location.reload(), 500);
     }
   }
-  return <section className="paper mt-6 rounded-2xl p-6"><h2 className="font-display text-2xl text-navy">Thêm khách mời</h2><p className="mt-2 text-sm text-slate-600">Thêm trực tiếp trên web, không cần chỉnh file CSV.</p><form className="mt-4 grid gap-3 sm:grid-cols-2" onSubmit={addGuest}><label className="text-sm font-semibold">Tên khách<input className="mt-2 block w-full rounded-xl border border-slate-300 p-2 font-normal" name="name" required /></label><label className="text-sm font-semibold">Danh xưng<input className="mt-2 block w-full rounded-xl border border-slate-300 p-2 font-normal" name="salutation" placeholder="Anh, Chị, Cô..." required /></label><label className="text-sm font-semibold">Nhóm<select className="mt-2 block w-full rounded-xl border border-slate-300 bg-white p-2 font-normal" name="group" defaultValue="Khác"><option>Gia đình</option><option>Bạn bè</option><option>Khác</option></select></label><label className="text-sm font-semibold">Liên hệ<input className="mt-2 block w-full rounded-xl border border-slate-300 p-2 font-normal" name="contact" /></label><label className="text-sm font-semibold sm:col-span-2">Lời nhắn riêng<textarea className="mt-2 block min-h-20 w-full rounded-xl border border-slate-300 p-2 font-normal" name="personalNote" /></label><button className="w-fit rounded-full bg-gold px-5 py-3 font-semibold text-navy" type="submit">Thêm khách</button></form>{addMessage && <p className="mt-3 text-sm text-navy">{addMessage}</p>}<hr className="my-6 border-slate-200" /><h3 className="font-display text-xl text-navy">Nhập danh sách bằng CSV</h3><p className="mt-2 text-sm text-slate-600">CSV cần có cột: Tên,Xưng hô,Nhóm,Liên hệ,Lời nhắn. Nhóm chỉ dùng: Gia đình, Bạn bè, Khác.</p><form className="mt-4 flex flex-wrap items-end gap-3" onSubmit={importCsv}><label className="text-sm font-semibold">File CSV<input className="mt-2 block max-w-full rounded-xl border border-slate-300 p-2 font-normal" type="file" name="file" accept=".csv,text/csv" required /></label><button className="rounded-full bg-gold px-5 py-3 font-semibold text-navy" type="submit">Nhập CSV</button></form>{message && <p className="mt-3 text-sm text-navy">{message}</p>}</section>;
+  return <><section className="paper mt-6 rounded-2xl p-6"><h2 className="font-display text-2xl text-navy">Thêm khách mời</h2><p className="mt-2 text-sm text-slate-600">Thêm trực tiếp trên web, không cần chỉnh file CSV.</p><form className="mt-4 grid gap-3 sm:grid-cols-2" onSubmit={addGuest}><label className="text-sm font-semibold">Tên khách<input className="mt-2 block w-full rounded-xl border border-slate-300 p-2 font-normal" name="name" required /></label><label className="text-sm font-semibold">Danh xưng<input className="mt-2 block w-full rounded-xl border border-slate-300 p-2 font-normal" name="salutation" placeholder="Anh, Chị, Cô..." required /></label><label className="text-sm font-semibold">Nhóm<select className="mt-2 block w-full rounded-xl border border-slate-300 bg-white p-2 font-normal" name="group" defaultValue="Khác"><option>Gia đình</option><option>Bạn bè</option><option>Khác</option></select></label><label className="text-sm font-semibold">Liên hệ<input className="mt-2 block w-full rounded-xl border border-slate-300 p-2 font-normal" name="contact" /></label><label className="text-sm font-semibold sm:col-span-2">Lời nhắn riêng<textarea className="mt-2 block min-h-20 w-full rounded-xl border border-slate-300 p-2 font-normal" name="personalNote" /></label><button className="w-fit rounded-full bg-gold px-5 py-3 font-semibold text-navy" type="submit">Thêm khách</button></form>{addMessage && <p className="mt-3 text-sm text-navy">{addMessage}</p>}<hr className="my-6 border-slate-200" /><h3 className="font-display text-xl text-navy">Nhập danh sách bằng CSV</h3><p className="mt-2 text-sm text-slate-600">CSV cần có cột: Tên,Xưng hô,Nhóm,Liên hệ,Lời nhắn. Nhóm chỉ dùng: Gia đình, Bạn bè, Khác.</p><form className="mt-4 flex flex-wrap items-end gap-3" onSubmit={importCsv}><label className="text-sm font-semibold">File CSV<input className="mt-2 block max-w-full rounded-xl border border-slate-300 p-2 font-normal" type="file" name="file" accept=".csv,text/csv" required disabled={importing} /></label><button className="rounded-full bg-gold px-5 py-3 font-semibold text-navy disabled:cursor-wait disabled:opacity-60" type="submit" disabled={importing}>{importing ? "Đang nhập..." : "Nhập CSV"}</button></form>{message && <p className="mt-3 text-sm text-navy">{message}</p>}</section>{importing && <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy/70 p-6" role="status" aria-live="polite" aria-label="Đang nhập CSV"><div className="rounded-2xl bg-white px-8 py-7 text-center shadow-2xl"><div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-gold" /><p className="mt-4 text-lg font-bold text-navy">Đang nhập danh sách...</p><p className="mt-1 text-sm text-slate-600">Vui lòng chờ, không thao tác trên trang.</p></div></div>}</>;
 }
