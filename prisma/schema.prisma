@@ -29,3 +29,10 @@ model Rsvp {
   updatedAt  DateTime @updatedAt
   guest      Guest    @relation(fields: [guestId], references: [id], onDelete: Cascade)
 }
+
+model EventSchedule {
+  id          Int    @id @default(1)
+  familyTime  String?
+  friendsTime String?
+  otherTime   String?
+}
