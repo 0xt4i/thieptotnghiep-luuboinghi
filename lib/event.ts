@@ -8,7 +8,7 @@ export const event = {
   deadline: process.env.RSVP_DEADLINE || "2026-11-21T23:59:59+07:00",
   notes: process.env.EVENT_NOTES || "Dress code: Trắng, Kem, Be",
   phone: process.env.GRADUATE_PHONE || "0399581679",
-  photoUrl: process.env.GRADUATE_PHOTO_URL || "/graduate-photo.webp",
+  photoUrl: process.env.GRADUATE_PHOTO_URL || "/boinghi_chinh.JPEG",
   musicUrl: process.env.GRADUATION_MUSIC_URL || "/graduation-music.mp3",
 };
 export function formatDate(value: string | Date) { const parts = Object.fromEntries(new Intl.DateTimeFormat("vi-VN", { weekday: "long", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Asia/Ho_Chi_Minh" }).formatToParts(new Date(value)).map(part => [part.type, part.value])); const weekday = parts.weekday.charAt(0).toUpperCase() + parts.weekday.slice(1); return `${parts.hour}:${parts.minute} · ${weekday}, ${parts.day}/${parts.month}/${parts.year}`; }

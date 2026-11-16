@@ -94,7 +94,7 @@ Bỏ trống biến nào thì trang dùng giá trị mặc định ghi trong `li
 | `EVENT_MAPS_URL` | link chia sẻ từ Google Maps | Nút "Chỉ đường" |
 | `EVENT_NOTES` | `Trang phục lịch sự; vui lòng đến trước 15 phút.` | Mục "Lưu ý" |
 | `GRADUATE_PHONE` | `0398989898` | Nút "Gọi" trên điện thoại |
-| `GRADUATE_PHOTO_URL` | để trống, hoặc `https://...jpg` | Ảnh chân dung. Để trống thì dùng `public/graduate-photo.webp` |
+| `GRADUATE_PHOTO_URL` | `/boinghi_chinh.JPEG`, hoặc `https://...jpg` | Ảnh chân dung. Mặc định dùng `public/boinghi_chinh.JPEG` |
 | `GRADUATION_MUSIC_URL` | để trống, hoặc `https://...mp3` | Nhạc nền. Để trống thì dùng `public/graduation-music.mp3` |
 
 > **Định dạng ngày giờ:** `NĂM-THÁNG-NGÀYTGIỜ:PHÚT:GIÂY+07:00`. Luôn giữ `+07:00` (giờ Việt Nam). Thiếu phần này, giờ hiển thị có thể lệch 7 tiếng trên Vercel.
@@ -227,7 +227,7 @@ Mỗi khi khách gửi hoặc sửa phản hồi, bạn nhận một tin gồm t
 | Muốn thay | Cách |
 |---|---|
 | Ngày giờ, địa điểm, hạn xác nhận, lưu ý, SĐT | Sửa biến môi trường ([mục 3](#thông-tin-buổi-lễ)), rồi redeploy trên Vercel |
-| Ảnh chân dung | Thay file `public/graduate-photo.webp` (ảnh dọc tỉ lệ 4:5), hoặc đặt `GRADUATE_PHOTO_URL` |
+| Ảnh chân dung | Dùng `public/boinghi_chinh.JPEG`, hoặc đặt `GRADUATE_PHOTO_URL` |
 | Nhạc nền | Thay file `public/graduation-music.mp3`, hoặc đặt `GRADUATION_MUSIC_URL`. Nhạc chỉ phát sau khi khách bấm "Mở thiệp" |
 | Logo trường | Thay file `public/logo.svg` |
 | Màu sắc, phông chữ, câu chữ cố định, hiệu ứng | Xem [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
