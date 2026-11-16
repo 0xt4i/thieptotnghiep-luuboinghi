@@ -11,6 +11,7 @@ type Props = {
   guest: {
     name: string;
     salutation: string;
+    contact: string | null;
     personalNote: string | null;
     rsvp: { status: string; companions: number; message: string | null } | null;
   };
@@ -85,6 +86,7 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
   const [status, setStatus] = useState(guest.rsvp?.status || "");
   const [companions, setCompanions] = useState(guest.rsvp?.companions || 0);
   const [message, setMessage] = useState(guest.rsvp?.message || "");
+  const [contact, setContact] = useState(guest.contact || "");
   const [pending, setPending] = useState(false);
   const [sent, setSent] = useState(false);
   const [error, setError] = useState("");
@@ -242,7 +244,7 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
     setError("");
     setPending(true);
     try {
-      const response = await fetch("/api/rsvp", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ token, status, companions: status === "ATTENDING" ? companions : 0, message, honeypot: "" }) });
+      const response = await fetch("/api/rsvp", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ token, status, companions: status === "ATTENDING" ? companions : 0, contact, message, honeypot: "" }) });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) setError(data.error || "Không thể gửi phản hồi. Vui lòng thử lại.");
       else setSent(true);
@@ -270,7 +272,6 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
           </span>
         </span>
         <span className={`relative mt-12 inline-flex min-h-12 items-center rounded-full bg-gold px-10 text-base font-bold text-navy-deep transition-opacity duration-300 ${opened ? "opacity-0" : ""}`}>Mở thiệp</span>
-        <span className={`relative mt-4 text-[13px] text-cream/75 transition-opacity duration-300 ${opened ? "opacity-0" : ""}`}>Chạm vào thiệp để mở · nhạc nền có thể tắt</span>
       </button>
     </section>;
   }
@@ -386,6 +387,10 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
                 <button type="button" aria-label="Thêm một người" onClick={() => setCompanions(companions + 1)} className={`flex h-11 w-11 items-center justify-center rounded-full border border-navy text-navy transition ${focusRing}`}><Plus aria-hidden="true" className="h-5 w-5" /></button>
               </div>
             </div>}
+            <div>
+              <label className="block text-base font-semibold" htmlFor="contact">Thông tin liên hệ <span className="font-normal text-muted">(không bắt buộc)</span></label>
+              <input id="contact" className="mt-2 block w-full rounded-xl border border-line bg-white p-3 text-base outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20" maxLength={200} value={contact} onChange={e => setContact(e.target.value)} placeholder="Số điện thoại hoặc email" />
+            </div>
             <div>
               <label className="block text-base font-semibold" htmlFor="message">Lời chúc gửi {event.graduate} <span className="font-normal text-muted">(không bắt buộc)</span></label>
               <textarea id="message" className="mt-2 block min-h-28 w-full rounded-xl border border-line bg-white p-3 text-base outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20" maxLength={500} value={message} onChange={e => setMessage(e.target.value)} placeholder="Một lời chúc nhỏ cũng làm ngày vui thêm trọn vẹn..." aria-describedby="message-count" />

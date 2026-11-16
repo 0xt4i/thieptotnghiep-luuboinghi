@@ -46,7 +46,7 @@ export default function GuestRow({ guest, link, qr, index }: { guest: Guest; lin
   }
 
   return <>
-    <tr className={`border-b border-slate-100 align-top ${guest.salutation === "Chưa bổ sung" ? "bg-red-50" : ""}`}>
+    <tr className={`border-b border-slate-100 align-top ${guest.salutation === "Chưa bổ sung" || (guest.rsvp?.status === "ATTENDING" && !guest.contact) ? "bg-red-50" : ""}`}>
       <td className="px-4 py-4 text-center font-semibold text-slate-500">{index + 1}</td>
       <td className="px-4 py-4 font-semibold">{guest.salutation} {guest.name}<div className="mt-1 text-xs font-normal text-slate-500">{guest.contact || "Chưa có liên hệ"}</div></td>
       <td className="px-4 py-4">{guest.group}</td>
@@ -58,7 +58,7 @@ export default function GuestRow({ guest, link, qr, index }: { guest: Guest; lin
       <td className="px-4 py-4" colSpan={6}>
         <form className="grid gap-3 md:grid-cols-2" onSubmit={save}>
           <label className="text-xs font-semibold text-slate-700">Tên khách<input className="mt-1 block w-full rounded-lg border border-slate-300 bg-white p-2 text-sm font-normal" name="name" defaultValue={guest.name} required /></label>
-          <label className="text-xs font-semibold text-slate-700">Danh xưng<input className="mt-1 block w-full rounded-lg border border-slate-300 bg-white p-2 text-sm font-normal" name="salutation" defaultValue={guest.salutation} required /></label>
+          <label className="text-xs font-semibold text-slate-700">Danh xưng<input className="mt-1 block w-full rounded-lg border border-slate-300 bg-white p-2 text-sm font-normal" name="salutation" defaultValue={guest.salutation} /></label>
           <label className="text-xs font-semibold text-slate-700">Nhóm<select className="mt-1 block w-full rounded-lg border border-slate-300 bg-white p-2 text-sm font-normal" name="group" defaultValue={guest.group === "Gia đình" || guest.group === "Bạn bè" || guest.group === "Khác" ? guest.group : "Khác"}><option>Gia đình</option><option>Bạn bè</option><option>Khác</option></select></label>
           <label className="text-xs font-semibold text-slate-700">Liên hệ<input className="mt-1 block w-full rounded-lg border border-slate-300 bg-white p-2 text-sm font-normal" name="contact" defaultValue={guest.contact || ""} /></label>
           <label className="text-xs font-semibold text-slate-700 md:col-span-2">Lời nhắn riêng<textarea className="mt-1 block min-h-20 w-full rounded-lg border border-slate-300 bg-white p-2 text-sm font-normal" name="personalNote" defaultValue={guest.personalNote || ""} /></label>
