@@ -1,6 +1,6 @@
-# Thiệp mời tốt nghiệp - Lưu Bội Nghi
+# Thân mời tốt nghiệp - Lưu Bội Nghi
 
-Thiệp mời online cá nhân hoá. Mỗi khách nhận một link riêng để xem thiệp, xác nhận tham dự và gửi lời chúc. Bạn quản lý danh sách khách và xem phản hồi ở trang quản trị `/admin`.
+Thân mời online cá nhân hoá. Mỗi khách nhận một link riêng để xem thiệp, xác nhận tham dự và gửi lời chúc. Bạn quản lý danh sách khách và xem phản hồi ở trang quản trị `/admin`.
 
 Tài liệu này hướng dẫn cài đặt từ đầu: tạo database, chạy trên máy, đưa lên Vercel, điền biến môi trường và chuẩn bị file danh sách khách. Muốn sửa code (đổi màu, thêm chức năng…) xem [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 

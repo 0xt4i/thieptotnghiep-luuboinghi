@@ -2,7 +2,7 @@
 
 import Image, { type StaticImageData } from "next/image";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { CalendarPlus, Check, CheckCircle2, Clock, Copy, Download, Info, Loader2, MapPin, Minus, Music, Navigation, Phone, Plus, Quote, VolumeX } from "lucide-react";
+import { Check, CheckCircle2, Clock, Copy, Info, Loader2, MapPin, Minus, Music, Navigation, Phone, Plus, Quote, VolumeX } from "lucide-react";
 import Countdown from "@/components/Countdown";
 import graduatePhoto from "@/public/graduate-photo.webp";
 
@@ -80,6 +80,7 @@ function DetailRow({ icon, label, children }: { icon: React.ReactNode; label: st
 
 export default function GuestInvitation({ token, guest, guestbook, event }: Props) {
   const recipient = `${guest.salutation} ${guest.name}`;
+  const coverGraduate = event.graduate.split(" (")[0].trim();
   const [opened, setOpened] = useState(false);
   const [coverVisible, setCoverVisible] = useState(true);
   const [musicOn, setMusicOn] = useState(false);
@@ -266,17 +267,18 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
     const hidden = side === "right" && !opened;
     return <section ref={side === "left" ? coverFrameRef : undefined} aria-hidden={side === "right" || undefined}className={`flex min-h-[calc(100dvh-1.5rem)] items-stretch rounded-[2rem] border border-gold/50 bg-navy p-5 shadow-2xl sm:min-h-[680px] ${opened ? `door ${door}` : ""} ${hidden ? "invisible" : ""}`}>
       <button type="button" onClick={openInvitation} disabled={opened} className={`relative flex w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[1.5rem] border border-gold/40 px-6 py-14 text-center ${focusRingDark}`}>
-        <Laurels />
-        <span className="relative font-display text-xl italic text-gold">Một lời mời trân trọng</span>
-        <span className={`relative mx-auto mt-10 block w-full max-w-[310px] rounded-lg border border-gold bg-cream p-6 text-navy shadow-xl transition-transform duration-300 ease-out ${opened ? "rotate-0" : "rotate-[-2deg]"}`}>
-          <span className="block border border-gold/60 px-4 py-10">
-            <span className="block font-display text-lg">Thiệp mời tốt nghiệp</span>
+        <Image src="/boinghi_phu.png" alt="" width={240} height={180} className="pointer-events-none absolute left-1/2 top-3 z-0 h-auto w-[43%] max-w-[220px] -translate-x-1/2 object-contain" />
+        <Image src="/xaxiu.png" alt="" width={180} height={260} className="pointer-events-none absolute bottom-12 left-0 z-0 h-auto w-[27%] max-w-[150px] object-contain object-bottom" />
+        <Image src="/sami.png" alt="" width={180} height={260} className="pointer-events-none absolute bottom-8 right-0 z-0 h-auto w-[28%] max-w-[155px] object-contain object-bottom" />
+        <span className={`relative z-10 mx-auto mt-28 block w-full max-w-[310px] rounded-lg border border-[#032B3A] bg-[linear-gradient(135deg,#F6E2B3_0%,#E7C888_50%,#D4AE6A_100%)] p-6 text-[#032B3A] shadow-xl transition-transform duration-300 ease-out rotate-0`}>
+          <span className="block border border-[#032B3A]/50 px-4 py-10">
+            <span className="block font-display text-lg">Thân mời tốt nghiệp</span>
             <span className="mt-6 block font-display text-3xl font-semibold leading-tight">{recipient}</span>
-            <span aria-hidden="true" className="mx-auto mt-5 block h-px w-20 bg-gold" />
-            <span className="mt-5 block text-[13px] font-semibold uppercase tracking-[.18em] text-accent">{event.graduate}</span>
+            <span aria-hidden="true" className="mx-auto mt-5 block h-px w-20 bg-[#032B3A]" />
+            <span className="mt-5 block text-[13px] font-semibold uppercase tracking-[.18em] text-[#032B3A]">{coverGraduate}</span>
           </span>
         </span>
-        <span className={`relative mt-12 inline-flex min-h-12 items-center rounded-full bg-gold px-10 text-base font-bold text-navy-deep transition-opacity duration-300 ${opened ? "opacity-0" : ""}`}>Mở thiệp</span>
+        <span className={`relative mt-10 inline-flex min-h-12 items-center rounded-full bg-[linear-gradient(135deg,#F6E2B3_0%,#E7C888_50%,#D4AE6A_100%)] px-10 text-base font-bold text-[#032B3A] transition-opacity duration-300 ${opened ? "opacity-0" : ""}`}>Mở thiệp</span>
       </button>
     </section>;
   }
@@ -303,9 +305,9 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
             <div className="mx-auto flex h-14 w-[160px] items-center justify-center rounded-2xl border-2 border-gold bg-white px-4 py-2 shadow-[0_12px_30px_rgba(0,0,0,.24)] md:h-24 md:w-64 lg:hidden">
               <Image src="/logo.svg" alt="Logo Trường Đại học Công nghiệp TP.HCM" width={240} height={86} className="h-full w-full object-contain" priority />
             </div>
-            <figure className="mx-auto mt-4 w-[min(38vw,140px)] max-[379px]:w-[120px] rotate-[-2deg] bg-white p-2.5 pb-0 shadow-[0_18px_40px_rgba(0,0,0,.35)] md:w-[260px] lg:mt-0 lg:w-full lg:max-w-[420px]">
+            <figure className="mx-auto mt-4 w-[min(38vw,140px)] max-[379px]:w-[120px] bg-white p-2.5 pb-0 shadow-[0_18px_40px_rgba(0,0,0,.35)] md:w-[260px] lg:mt-0 lg:w-full lg:max-w-[420px]">
               <div className="relative aspect-[4/5] overflow-hidden bg-[#dce7ed]">
-                {event.photoUrl ? <Image src={photo.src} alt={`Ảnh tốt nghiệp của ${event.graduate}`} fill sizes="(min-width: 1024px) 400px, (min-width: 768px) 260px, 140px" className="object-cover" placeholder={photo.external || typeof photo.src === "string" ? "empty" : "blur"} unoptimized={photo.external} priority /> : <svg aria-label="Khung ảnh chân dung tốt nghiệp" className="absolute inset-0 m-auto h-32 w-32 text-navy/50" viewBox="0 0 160 160" fill="none"><circle cx="80" cy="58" r="25" stroke="currentColor" strokeWidth="2" /><path d="M35 135c7-31 22-46 45-46s38 15 45 46M48 43l32-20 32 20-32 19-32-19Zm32 19v18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M27 137h106" stroke="#c9a227" strokeWidth="2" /></svg>}
+                {event.photoUrl ? <Image src={photo.src} alt={`Ảnh tốt nghiệp của ${event.graduate}`} fill sizes="(min-width: 1024px) 400px, (min-width: 768px) 260px, 140px" className="object-cover" placeholder={photo.external || typeof photo.src === "string" ? "empty" : "blur"} unoptimized={photo.external} priority /> : <svg aria-label="Khung ảnh chân dung tốt nghiệp" className="absolute inset-0 m-auto h-32 w-32 text-navy/50" viewBox="0 0 160 160" fill="none"><circle cx="80" cy="58" r="25" stroke="currentColor" strokeWidth="2" /><path d="M35 135c7-31 22-46 45-46s38 15 45 46M48 43l32-20 32 20-32 19-32-19Zm32 19v18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /><path d="M27 137h106" stroke="#edd39a" strokeWidth="2" /></svg>}
               </div>
               <figcaption className="py-1.5 text-center font-display text-[15px] italic text-navy md:py-2 md:text-base">Chặng đường mới</figcaption>
             </figure>
@@ -315,11 +317,16 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
             <div className="mx-auto hidden h-24 w-64 items-center justify-center rounded-2xl border-2 border-gold bg-white px-5 py-3 shadow-[0_12px_30px_rgba(0,0,0,.24)] lg:ml-0 lg:flex">
               <Image src="/logo.svg" alt="" width={240} height={86} className="h-full w-full object-contain" />
             </div>
-            <p className="mt-4 font-display text-xl italic text-gold lg:mt-10">Trân trọng kính mời</p>
-            <h1 className="mt-1 font-sans text-[2.125rem] font-semibold leading-[1.1] tracking-[-.02em] md:text-5xl lg:text-6xl">{recipient}</h1>
+            <div className="mt-4 flex items-baseline gap-2 whitespace-nowrap lg:mt-10">
+              <p className="font-display text-xl italic text-gold">Trân trọng kính mời</p>
+              <h1 className="font-sans font-semibold leading-[1.1] tracking-[-.02em]">
+                {guest.salutation && <span className="font-display text-xl italic text-gold">{guest.salutation} </span>}
+                <span className="text-[2.125rem] md:text-5xl lg:text-6xl">{guest.name}</span>
+              </h1>
+            </div>
             <p className="mt-3 text-base text-cream/85 lg:text-lg">đến chung vui trong ngày tốt nghiệp của</p>
             <h2 className="mt-1 font-display text-3xl font-semibold text-gold md:text-4xl">{event.graduate}</h2>
-            <p className="mt-2 text-[13px] text-cream/75 max-[379px]:hidden">Trường Đại học Công nghiệp TP.HCM · Khóa 20</p>
+            <p className="mt-2 text-[13px] text-cream/75 max-[379px]:hidden">Trường Đại học Công nghiệp TP.HCM · Khóa 18</p>
             <div className="mx-auto mt-4 grid max-w-sm gap-2 rounded-2xl border border-gold/40 bg-white/5 px-4 py-2.5 text-left lg:mx-0">
               <p className="flex gap-3 text-base leading-6"><Clock aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-gold" /><span>{event.dateLabel}</span></p>
               <p className="flex gap-3 text-base leading-6"><MapPin aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-gold" /><span>{event.venue}</span></p>
@@ -356,8 +363,6 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
         </div>
         <div className="flex flex-wrap gap-3">
           <a className={`inline-flex min-h-11 items-center gap-2 rounded-full bg-navy px-5 text-base font-semibold text-cream transition hover:bg-[#164b7c] ${focusRing}`} href={event.mapsUrl} target="_blank" rel="noreferrer"><Navigation aria-hidden="true" className="h-5 w-5" />Chỉ đường</a>
-          <a className={`inline-flex min-h-11 items-center gap-2 rounded-full border border-navy px-5 text-base font-semibold text-navy transition hover:bg-white ${focusRing}`} href={event.calendarUrl} target="_blank" rel="noreferrer"><CalendarPlus aria-hidden="true" className="h-5 w-5" />Thêm vào Google Calendar</a>
-          <a className={`inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-sm font-semibold text-accent underline-offset-4 hover:underline ${focusRing}`} href="/api/calendar"><Download aria-hidden="true" className="h-4 w-4" />Tải file lịch (.ics)</a>
         </div>
       </section>
 
@@ -368,7 +373,6 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
         : sent ? <div role="status" className="mt-5 rounded-xl border border-emerald-700/30 bg-emerald-50 p-5 text-base leading-7 text-emerald-900">
             <p className="flex items-start gap-2 font-semibold"><CheckCircle2 aria-hidden="true" className="mt-1 h-5 w-5 shrink-0" />Cảm ơn {recipient}! Phản hồi của {guest.salutation} đã được ghi nhận.</p>
             <div className="mt-4 flex flex-wrap gap-3">
-              {status === "ATTENDING" && <a className={`inline-flex min-h-11 items-center gap-2 rounded-full bg-navy px-5 text-base font-semibold text-cream ${focusRing}`} href={event.calendarUrl} target="_blank" rel="noreferrer"><CalendarPlus aria-hidden="true" className="h-5 w-5" />Thêm vào Google Calendar</a>}
               <button type="button" onClick={() => setSent(false)} className={`inline-flex min-h-11 items-center rounded-full border border-emerald-800/40 px-5 text-base font-semibold ${focusRing}`}>Sửa phản hồi</button>
             </div>
           </div>
@@ -393,11 +397,11 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
               </div>
             </div>}
             <div>
-              <label className="block text-base font-semibold" htmlFor="contact">Số điện thoại {status === "ATTENDING" && <span className="text-red-700">*</span>} {status !== "ATTENDING" && <span className="font-normal text-muted">(không bắt buộc)</span>}</label>
+              <label className="block text-base font-semibold" htmlFor="contact">Số điện thoại {status === "ATTENDING" && <span className="text-red-700">*</span>} {status !== "ATTENDING" && <span className="font-normal text-muted"></span>}</label>
               <input id="contact" className="mt-2 block w-full rounded-xl border border-line bg-white p-3 text-base outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20" type="tel" inputMode="tel" maxLength={20} value={contact} onChange={e => setContact(e.target.value)} placeholder="Nhập số điện thoại" required={status === "ATTENDING"} />
             </div>
             <div>
-              <label className="block text-base font-semibold" htmlFor="message">Lời chúc gửi {event.graduate} <span className="font-normal text-muted">(không bắt buộc)</span></label>
+              <label className="block text-base font-semibold" htmlFor="message">Lời chúc gửi {event.graduate} <span className="font-normal text-muted"></span></label>
               <textarea id="message" className="mt-2 block min-h-28 w-full rounded-xl border border-line bg-white p-3 text-base outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20" maxLength={500} value={message} onChange={e => setMessage(e.target.value)} placeholder="Một lời chúc nhỏ cũng làm ngày vui thêm trọn vẹn..." aria-describedby="message-count" />
               <p id="message-count" className="mt-1 text-right text-[13px] text-muted">{message.length}/500</p>
             </div>

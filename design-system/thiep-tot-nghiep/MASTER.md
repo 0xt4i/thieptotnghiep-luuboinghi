@@ -6,7 +6,7 @@
 
 ---
 
-**Dự án:** Thiệp Tốt Nghiệp (thiệp mời lễ tốt nghiệp — Next.js 14 + Tailwind)
+**Dự án:** Thiệp Tốt Nghiệp (Thân mời lễ tốt nghiệp — Next.js 14 + Tailwind)
 **Tạo lúc:** 2026-10-29 bằng ui-ux-pro-max `--persist`, sau đó chỉnh theo hướng thiết kế đã chốt
 **Hướng thiết kế:** A — Academic Heritage (học thuật cổ điển), mượn từ B (Editorial): phần mở đầu lấy ảnh chân dung làm trọng tâm + câu trích dẫn cỡ lớn
 **Thông số thiết kế:** Độ biến tấu 3/10 (căn giữa / tối giản) | Chuyển động 3/10 (nhẹ nhàng) | Mật độ 2/10 (thoáng)
@@ -114,7 +114,7 @@
 
 ### Bố cục trang
 
-**Tên bố cục:** Thiệp mời sự kiện (phỏng theo trang giới thiệu sự kiện / hội nghị)
+**Tên bố cục:** Thân mời sự kiện (phỏng theo trang giới thiệu sự kiện / hội nghị)
 
 - **Mục tiêu chuyển đổi:** khách gửi RSVP
 - **Vị trí nút kêu gọi:** thanh cố định dưới đáy (điện thoại) + section RSVP + sau khi xác nhận

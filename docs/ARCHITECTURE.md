@@ -118,7 +118,7 @@ design-system/               Quy tắc thiết kế: MASTER.md (chung) + pages/i
 
 ### Khách mở thiệp
 
-1. `app/i/[token]/page.tsx` tìm `Guest` theo token. Token sai thì hiện trang "Thiệp mời không khả dụng".
+1. `app/i/[token]/page.tsx` tìm `Guest` theo token. Token sai thì hiện trang "Thân mời không khả dụng".
 2. Lấy 30 lời chúc mới nhất làm sổ lưu bút (chỉ nội dung, không kèm tên).
 3. Gộp `event` từ `lib/event.ts` với các giá trị tính sẵn (`dateLabel`, `pastDeadline`, `calendarUrl`) rồi truyền vào `GuestInvitation`.
 4. Khách bấm **Mở thiệp**:
@@ -267,7 +267,7 @@ Trong `app/layout.tsx`, thay `Be_Vietnam_Pro` / `EB_Garamond` bằng phông khá
 | Ảnh chân dung | Thay `public/graduate-photo.webp`, hoặc đặt `GRADUATE_PHOTO_URL` |
 | Nhạc nền | Thay `public/graduation-music.mp3`, hoặc đặt `GRADUATION_MUSIC_URL` |
 | Logo trường | Thay `public/logo.svg` |
-| Dòng chữ cố định ("Trân trọng kính mời", "Chặng đường mới", "Khóa 20"…) | Sửa trực tiếp trong `components/GuestInvitation.tsx` |
+| Dòng chữ cố định ("Trân trọng kính mời", "Chặng đường mới", "Khóa 18"…) | Sửa trực tiếp trong `components/GuestInvitation.tsx` |
 | Tin nhắn mời khi bấm "Copy tin nhắn" trong dashboard | `components/CopyButtons.tsx` (đang ghi cứng tên "Lưu Bội Nghi", chưa đọc từ `event.graduate`) |
 | Tiêu đề tab, mô tả | `metadata` trong `app/layout.tsx`, `generateMetadata` trong `app/i/[token]/page.tsx` |
 
