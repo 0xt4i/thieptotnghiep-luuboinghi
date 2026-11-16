@@ -40,10 +40,14 @@ export function parseGuestsCsv(csv: string) {
     if (!get("name")) {
       throw new Error(`Dòng ${index + 2} không hợp lệ.`);
     }
+    const group = get("group") || "Khác";
+    if (!["Gia đình", "Bạn bè", "Khác"].includes(group)) {
+      throw new Error(`Dòng ${index + 2} không hợp lệ: nhóm chỉ được là Gia đình, Bạn bè hoặc Khác.`);
+    }
     return {
       name: get("name"),
       salutation: get("salutation") || "Chưa bổ sung",
-      group: get("group") || "Chưa phân nhóm",
+      group: group as "Gia đình" | "Bạn bè" | "Khác",
       contact: get("contact") || null,
       personalNote: get("personal_note") || null,
     };

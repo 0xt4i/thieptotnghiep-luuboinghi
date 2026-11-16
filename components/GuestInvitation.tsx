@@ -91,6 +91,8 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
   const [copied, setCopied] = useState<"" | "ok" | "fail">("");
   const [rsvpInView, setRsvpInView] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const musicOnRef = useRef(false);
+  const resumeMusicRef = useRef(false);
   const firstStatusRef = useRef<HTMLInputElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const coverFrameRef = useRef<HTMLElement>(null);
@@ -98,6 +100,42 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
   const rsvpRef = useRef<HTMLElement>(null);
   const photo = photoSource(event.photoUrl);
   const phoneHref = event.phone ? `tel:${event.phone.replace(/[^\d+]/g, "")}` : "";
+
+  useEffect(() => {
+    const pauseForNavigation = () => {
+      const audio = audioRef.current;
+      if (!audio || !musicOnRef.current) return;
+      resumeMusicRef.current = true;
+      audio.pause();
+      musicOnRef.current = false;
+      setMusicOn(false);
+    };
+    const resumeAfterNavigation = () => {
+      const audio = audioRef.current;
+      if (!audio || !resumeMusicRef.current || !opened) return;
+      void audio.play().then(() => {
+        resumeMusicRef.current = false;
+        musicOnRef.current = true;
+        setMusicOn(true);
+      }).catch(() => {
+        resumeMusicRef.current = false;
+        musicOnRef.current = false;
+        setMusicOn(false);
+      });
+    };
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") pauseForNavigation();
+      else resumeAfterNavigation();
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    window.addEventListener("pagehide", pauseForNavigation);
+    window.addEventListener("pageshow", resumeAfterNavigation);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("pagehide", pauseForNavigation);
+      window.removeEventListener("pageshow", resumeAfterNavigation);
+    };
+  }, [opened]);
 
   // Opening: the invitation starts exactly over the cover frame (same edges and corner radius), waits behind the doors
   // as they swing away, coming into focus from a blur, then grows into place.
@@ -156,14 +194,36 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     window.setTimeout(() => setCoverVisible(false), reduceMotion ? 0 : 1400);
     if (audioRef.current) {
-      try { await audioRef.current.play(); setMusicOn(true); } catch { setMusicOn(false); }
+      try {
+        await audioRef.current.play();
+        musicOnRef.current = true;
+        resumeMusicRef.current = false;
+        setMusicOn(true);
+      } catch {
+        musicOnRef.current = false;
+        setMusicOn(false);
+      }
     }
   }
 
   async function toggleMusic() {
     if (!audioRef.current) return;
-    if (musicOn) { audioRef.current.pause(); setMusicOn(false); }
-    else { try { await audioRef.current.play(); setMusicOn(true); } catch { setMusicOn(false); } }
+    if (musicOnRef.current) {
+      audioRef.current.pause();
+      musicOnRef.current = false;
+      resumeMusicRef.current = false;
+      setMusicOn(false);
+    } else {
+      try {
+        await audioRef.current.play();
+        musicOnRef.current = true;
+        resumeMusicRef.current = false;
+        setMusicOn(true);
+      } catch {
+        musicOnRef.current = false;
+        setMusicOn(false);
+      }
+    }
   }
 
   async function copyAddress() {

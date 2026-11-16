@@ -151,21 +151,21 @@ Cách dễ nhất: mở `prisma/guests-upload-template.csv` bằng Excel hoặc 
 Dòng đầu tiên là tên cột, viết đúng như dưới đây (chữ thường, thứ tự cột không quan trọng):
 
 ```
-name,salutation,group,contact,personal_note
+Tên,Xưng hô,Nhóm,Liên hệ,Lời nhắn
 ```
 
 | Cột | Bắt buộc | Ví dụ | Ý nghĩa |
 |---|---|---|---|
 | `name` | ✔ | `Hữu Tài` | Tên khách, không kèm danh xưng |
 | `salutation` | ✔ | `Anh`, `Chị`, `Em`, `Cô`, `Chú`, `Bạn` | Danh xưng, đứng trước tên: "Kính mời **Anh** Hữu Tài" |
-| `group` | ✔ | `Gia đình`, `Bạn bè`, `Thầy cô` | Nhóm khách, dùng để thống kê trong dashboard |
+| `group` | ✔ | `Gia đình`, `Bạn bè`, `Khác` | Nhóm khách, dùng để thống kê trong dashboard |
 | `contact` | | `0901234567` hoặc email | Chỉ admin thấy. Dùng để nhận ra khách khi nhập lại file |
 | `personal_note` | | `"Chúc anh luôn rực rỡ trên hành trình mới!"` | Lời nhắn riêng, hiện thành câu trích dẫn lớn trong thiệp |
 
 ### Ví dụ
 
 ```csv
-name,salutation,group,contact,personal_note
+Tên,Xưng hô,Nhóm,Liên hệ,Lời nhắn
 Hữu Tài,Anh,Gia đình,0901234567,"Chúc anh luôn rực rỡ trên hành trình mới!"
 Minh Triết,Em,Gia đình,0907654321,
 Nguyễn Thị Lan,Cô,Thầy cô,lan@example.com,"Em cảm ơn cô, nhờ cô em mới có ngày hôm nay."
