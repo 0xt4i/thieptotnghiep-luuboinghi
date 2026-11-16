@@ -6,7 +6,7 @@ export const event = {
   address: process.env.EVENT_ADDRESS || "12 Nguyễn Văn Bảo, phường 4, quận Gò Vấp, TP. Hồ Chí Minh",
   mapsUrl: process.env.EVENT_MAPS_URL || "https://maps.google.com/?q=Trường+Đại+học+Công+nghiệp+TP.HCM",
   deadline: process.env.RSVP_DEADLINE || "2026-11-21T23:59:59+07:00",
-  notes: process.env.EVENT_NOTES || "Dress code: Trắng, Kem, Be, Đen.",
+  notes: process.env.EVENT_NOTES || "Dress code: Trắng, Kem, Be",
   phone: process.env.GRADUATE_PHONE || "0399581679",
   photoUrl: process.env.GRADUATE_PHOTO_URL || "/graduate-photo.webp",
   musicUrl: process.env.GRADUATION_MUSIC_URL || "/graduation-music.mp3",

@@ -2,7 +2,7 @@ import crypto from "crypto";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { isAdmin } from "@/lib/auth";
-import { guestSchema } from "@/lib/validation";
+import { guestSchema, personalNoteSchema } from "@/lib/validation";
 
 export async function POST(request: Request) {
   if (!isAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -26,6 +26,12 @@ export async function POST(request: Request) {
 export async function PATCH(request: Request) {
   if (!isAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const body = await request.json().catch(() => null);
+  if (body?.applyToAll === true) {
+    const note = personalNoteSchema.safeParse(body.personalNote);
+    if (!note.success) return NextResponse.json({ error: "Lời nhắn không hợp lệ." }, { status: 400 });
+    const result = await db.guest.updateMany({ data: { personalNote: note.data || null } });
+    return NextResponse.json({ ok: true, count: result.count });
+  }
   const guestId = typeof body?.guestId === "string" ? body.guestId : "";
   const parsed = guestSchema.safeParse(body);
   if (!guestId || !parsed.success) return NextResponse.json({ error: "Thông tin khách chưa hợp lệ." }, { status: 400 });

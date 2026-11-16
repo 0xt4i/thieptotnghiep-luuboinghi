@@ -8,3 +8,4 @@ export const guestSchema = z.object({
   contact: z.string().trim().max(200).optional().default(""),
   personalNote: z.string().trim().max(500).optional().default(""),
 });
+export const personalNoteSchema = z.string().trim().max(500);
