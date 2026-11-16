@@ -52,7 +52,7 @@ export default function GuestRow({ guest, link, qr, index }: { guest: Guest; lin
 
   return <>
     {busy && <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy/70 p-6" role="status" aria-live="polite" aria-label="Đang lưu thay đổi"><div className="rounded-2xl bg-white px-8 py-7 text-center shadow-2xl"><div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-gold" /><p className="mt-4 text-lg font-bold text-navy">Đang lưu thay đổi...</p><p className="mt-1 text-sm text-slate-600">Vui lòng chờ, không thao tác trên trang.</p></div></div>}
-    <tr className={`border-b border-slate-100 align-top ${guest.salutation === "Chưa bổ sung" || (guest.rsvp?.status === "ATTENDING" && !guest.contact) ? "bg-red-50" : guest.rsvp?.status === "ATTENDING" && Boolean(guest.contact) && guest.salutation !== "Chưa bổ sung" ? "bg-emerald-50" : ""}`}>
+    <tr className={`border-b border-slate-100 align-top ${guest.salutation === "Chưa bổ sung" ? "bg-red-50" : guest.rsvp?.status === "ATTENDING" && !guest.contact ? "bg-amber-50" : guest.rsvp?.status === "ATTENDING" && guest.contact ? "bg-emerald-50" : ""}`}>
       <td className="px-4 py-4 text-center font-semibold text-slate-500">{index + 1}</td>
       <td className="px-4 py-4 font-semibold">{guest.salutation} {guest.name}<div className="mt-1 text-xs font-normal text-slate-500">{guest.contact || "Chưa có liên hệ"}</div></td>
       <td className="px-4 py-4">{guest.group}</td>
