@@ -241,6 +241,11 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
       firstStatusRef.current?.focus();
       return;
     }
+    if (status === "ATTENDING" && !/^(?:\+84|0)\d{9,10}$/.test(contact.replace(/[\s.-]/g, ""))) {
+      setError("Vui lòng nhập số điện thoại hợp lệ để xác nhận tham dự.");
+      document.getElementById("contact")?.focus();
+      return;
+    }
     setError("");
     setPending(true);
     try {
@@ -388,8 +393,8 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
               </div>
             </div>}
             <div>
-              <label className="block text-base font-semibold" htmlFor="contact">Thông tin liên hệ <span className="font-normal text-muted">(không bắt buộc)</span></label>
-              <input id="contact" className="mt-2 block w-full rounded-xl border border-line bg-white p-3 text-base outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20" maxLength={200} value={contact} onChange={e => setContact(e.target.value)} placeholder="Số điện thoại hoặc email" />
+              <label className="block text-base font-semibold" htmlFor="contact">Số điện thoại {status === "ATTENDING" && <span className="text-red-700">*</span>} {status !== "ATTENDING" && <span className="font-normal text-muted">(không bắt buộc)</span>}</label>
+              <input id="contact" className="mt-2 block w-full rounded-xl border border-line bg-white p-3 text-base outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20" type="tel" inputMode="tel" maxLength={20} value={contact} onChange={e => setContact(e.target.value)} placeholder="Nhập số điện thoại" required={status === "ATTENDING"} />
             </div>
             <div>
               <label className="block text-base font-semibold" htmlFor="message">Lời chúc gửi {event.graduate} <span className="font-normal text-muted">(không bắt buộc)</span></label>

@@ -15,6 +15,7 @@ export async function POST(request: Request) {
   if (isPastDeadline()) return NextResponse.json({ error: "Đã quá hạn xác nhận tham dự." }, { status: 400 });
   const parsed = rsvpSchema.safeParse(body); if (!parsed.success) return NextResponse.json({ error: "Thông tin RSVP chưa hợp lệ." }, { status: 400 });
   if (parsed.data.honeypot) return NextResponse.json({ ok: true });
+  if (parsed.data.status === "ATTENDING" && !/^(?:\+84|0)\d{9,10}$/.test(parsed.data.contact.replace(/[\s.-]/g, ""))) return NextResponse.json({ error: "Vui lòng nhập số điện thoại hợp lệ để xác nhận tham dự." }, { status: 400 });
   if (parsed.data.status !== "ATTENDING" && parsed.data.companions !== 0) return NextResponse.json({ error: "Số người đi kèm chỉ áp dụng khi tham dự." }, { status: 400 });
   await db.guest.update({ where: { id: guest.id }, data: { contact: parsed.data.contact || null } });
   const existing = await db.rsvp.findUnique({ where: { guestId: guest.id } });
