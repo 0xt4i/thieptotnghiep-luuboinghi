@@ -23,16 +23,29 @@ export function parseCsvLine(line: string) {
 export function parseGuestsCsv(csv: string) {
   const lines = csv.replace(/^\uFEFF/, "").split(/\r?\n/).filter(line => line.trim());
   if (lines.length < 2) throw new Error("CSV cần có dòng tiêu đề và ít nhất một khách.");
-  const headers = parseCsvLine(lines[0]).map(header => header.toLowerCase());
-  const required = ["name", "salutation", "group", "contact", "max_guests", "personal_note"];
-  if (required.some(header => !headers.includes(header))) throw new Error("CSV phải có đủ cột: name, salutation, group, contact, max_guests, personal_note.");
+  const headers = parseCsvLine(lines[0]).map(header => header.toLowerCase().trim());
+  const aliases: Record<string, string[]> = {
+    name: ["name", "tên"],
+    salutation: ["salutation", "xưng hô", "danh xưng"],
+    group: ["group", "nhóm"],
+    contact: ["contact", "liên hệ"],
+    personal_note: ["personal_note", "lời nhắn"],
+  };
+  const column = (field: string) => aliases[field].map(alias => headers.indexOf(alias)).find(index => index >= 0) ?? -1;
+  const required = ["name", "salutation", "group", "contact", "personal_note"];
+  if (required.some(header => column(header) < 0)) throw new Error("CSV phải có các cột: name/tên, salutation/xưng hô, group/nhóm, contact/liên hệ, personal_note/lời nhắn.");
   return lines.slice(1).map((line, index) => {
     const values = parseCsvLine(line);
-    const get = (header: string) => values[headers.indexOf(header)] || "";
-    const maxGuests = Number(get("max_guests"));
-    if (!get("name") || !get("salutation") || !get("group") || !Number.isInteger(maxGuests) || maxGuests < 0 || maxGuests > 20) {
+    const get = (field: string) => values[column(field)] || "";
+    if (!get("name")) {
       throw new Error(`Dòng ${index + 2} không hợp lệ.`);
     }
-    return { name: get("name"), salutation: get("salutation"), group: get("group"), contact: get("contact") || null, maxGuests, personalNote: get("personal_note") || null };
+    return {
+      name: get("name"),
+      salutation: get("salutation") || "Chưa bổ sung",
+      group: get("group") || "Chưa phân nhóm",
+      contact: get("contact") || null,
+      personalNote: get("personal_note") || null,
+    };
   });
 }

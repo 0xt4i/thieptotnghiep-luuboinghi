@@ -7,13 +7,12 @@ export async function GET(request: Request) {
   const rows: Array<Guest & { rsvp: Rsvp | null }> = await db.guest.findMany({ include: { rsvp: true }, orderBy: { name: "asc" } });
   const requestUrl = new URL(request.url);
   const site = process.env.NEXT_PUBLIC_SITE_URL || requestUrl.origin;
-  const head = ["name", "salutation", "group", "contact", "max_guests", "personal_note", "status", "companions", "message", "created_at", "responded_at", "invite_link"].join(",");
+  const head = ["name", "salutation", "group", "contact", "personal_note", "status", "companions", "message", "created_at", "responded_at", "invite_link"].join(",");
   const lines = rows.map((g) => [
     g.name,
     g.salutation,
     g.group,
     g.contact,
-    g.maxGuests,
     g.personalNote || "",
     g.rsvp?.status || "CHUA_PHAN_HOI",
     g.rsvp?.companions || 0,

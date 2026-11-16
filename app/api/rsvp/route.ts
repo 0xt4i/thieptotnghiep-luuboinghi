@@ -16,7 +16,6 @@ export async function POST(request: Request) {
   const parsed = rsvpSchema.safeParse(body); if (!parsed.success) return NextResponse.json({ error: "Thông tin RSVP chưa hợp lệ." }, { status: 400 });
   if (parsed.data.honeypot) return NextResponse.json({ ok: true });
   if (parsed.data.status !== "ATTENDING" && parsed.data.companions !== 0) return NextResponse.json({ error: "Số người đi kèm chỉ áp dụng khi tham dự." }, { status: 400 });
-  if (parsed.data.companions > guest.maxGuests) return NextResponse.json({ error: `Số người đi kèm tối đa là ${guest.maxGuests}.` }, { status: 400 });
   const existing = await db.rsvp.findUnique({ where: { guestId: guest.id } });
   const rsvp = await db.rsvp.upsert({ where: { guestId: guest.id }, create: { guestId: guest.id, status: parsed.data.status, companions: parsed.data.companions, message: parsed.data.message }, update: { status: parsed.data.status, companions: parsed.data.companions, message: parsed.data.message } });
   try { await notifyOwner(guest, rsvp, Boolean(existing)); } catch (error) { console.error("Notification failed", error); }

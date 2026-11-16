@@ -11,7 +11,6 @@ type Props = {
   guest: {
     name: string;
     salutation: string;
-    maxGuests: number;
     personalNote: string | null;
     rsvp: { status: string; companions: number; message: string | null } | null;
   };
@@ -84,7 +83,7 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
   const [coverVisible, setCoverVisible] = useState(true);
   const [musicOn, setMusicOn] = useState(false);
   const [status, setStatus] = useState(guest.rsvp?.status || "");
-  const [companions, setCompanions] = useState(Math.min(guest.rsvp?.companions || 0, guest.maxGuests));
+  const [companions, setCompanions] = useState(guest.rsvp?.companions || 0);
   const [message, setMessage] = useState(guest.rsvp?.message || "");
   const [pending, setPending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -319,12 +318,12 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
                 </label>)}
               </div>
             </fieldset>
-            {status === "ATTENDING" && guest.maxGuests > 0 && <div>
-              <p className="text-base font-semibold" id="companions-label">Số người đi cùng {guest.salutation} (tối đa {guest.maxGuests})</p>
+            {status === "ATTENDING" && <div>
+              <p className="text-base font-semibold" id="companions-label">Số người đi cùng {guest.salutation}</p>
               <div className="mt-2 flex items-center gap-3" role="group" aria-labelledby="companions-label">
                 <button type="button" aria-label="Bớt một người" onClick={() => setCompanions(Math.max(0, companions - 1))} disabled={companions === 0} className={`flex h-11 w-11 items-center justify-center rounded-full border border-navy text-navy transition disabled:opacity-40 ${focusRing}`}><Minus aria-hidden="true" className="h-5 w-5" /></button>
                 <output aria-live="polite" className="w-8 text-center text-xl font-bold">{companions}</output>
-                <button type="button" aria-label="Thêm một người" onClick={() => setCompanions(Math.min(guest.maxGuests, companions + 1))} disabled={companions >= guest.maxGuests} className={`flex h-11 w-11 items-center justify-center rounded-full border border-navy text-navy transition disabled:opacity-40 ${focusRing}`}><Plus aria-hidden="true" className="h-5 w-5" /></button>
+                <button type="button" aria-label="Thêm một người" onClick={() => setCompanions(companions + 1)} className={`flex h-11 w-11 items-center justify-center rounded-full border border-navy text-navy transition ${focusRing}`}><Plus aria-hidden="true" className="h-5 w-5" /></button>
               </div>
             </div>}
             <div>

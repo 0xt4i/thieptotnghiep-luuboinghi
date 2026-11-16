@@ -111,7 +111,7 @@ design-system/               Quy tắc thiết kế: MASTER.md (chung) + pages/i
 
 | Model | Trường | Ghi chú |
 |---|---|---|
-| `Guest` | `token` (unique), `name`, `salutation`, `group`, `contact?`, `maxGuests`, `personalNote?` | Một dòng = một thiệp |
+| `Guest` | `token` (unique), `name`, `salutation`, `group`, `contact?`, `personalNote?` | Một dòng = một thiệp |
 | `Rsvp` | `guestId` (unique), `status`, `companions`, `message?`, `updatedAt` | Mỗi khách tối đa một RSVP; xoá khách thì xoá RSVP theo (`onDelete: Cascade`) |
 
 `status` là chuỗi `ATTENDING` / `DECLINED` / `MAYBE`. Danh sách hợp lệ nằm ở `lib/validation.ts`, nhãn hiển thị ở `statusOptions` trong `GuestInvitation.tsx`, trong dashboard và trong `lib/notifications.ts`.
@@ -129,7 +129,7 @@ design-system/               Quy tắc thiết kế: MASTER.md (chung) + pages/i
 
 ### `POST /api/rsvp`
 
-Giới hạn tần suất theo IP (10 lần/phút, bộ nhớ trong) → tìm khách theo token → chặn nếu quá hạn → validate bằng zod → kiểm tra `companions ≤ maxGuests` → `upsert` → gửi thông báo. Lỗi thông báo chỉ được ghi log, không làm hỏng RSVP.
+Giới hạn tần suất theo IP (10 lần/phút, bộ nhớ trong) → tìm khách theo token → chặn nếu quá hạn → validate bằng zod → `upsert` → gửi thông báo. Lỗi thông báo chỉ được ghi log, không làm hỏng RSVP.
 
 ### Admin
 

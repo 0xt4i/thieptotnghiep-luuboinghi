@@ -14,7 +14,6 @@ model Guest {
   salutation    String
   group         String
   contact       String?
-  maxGuests     Int      @default(0)
   personalNote  String?
   createdAt     DateTime @default(now())
   rsvp          Rsvp?

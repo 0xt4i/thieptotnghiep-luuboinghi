@@ -151,7 +151,7 @@ Cách dễ nhất: mở `prisma/guests-upload-template.csv` bằng Excel hoặc 
 Dòng đầu tiên là tên cột, viết đúng như dưới đây (chữ thường, thứ tự cột không quan trọng):
 
 ```
-name,salutation,group,contact,max_guests,personal_note
+name,salutation,group,contact,personal_note
 ```
 
 | Cột | Bắt buộc | Ví dụ | Ý nghĩa |
@@ -160,16 +160,15 @@ name,salutation,group,contact,max_guests,personal_note
 | `salutation` | ✔ | `Anh`, `Chị`, `Em`, `Cô`, `Chú`, `Bạn` | Danh xưng, đứng trước tên: "Kính mời **Anh** Hữu Tài" |
 | `group` | ✔ | `Gia đình`, `Bạn bè`, `Thầy cô` | Nhóm khách, dùng để thống kê trong dashboard |
 | `contact` | | `0901234567` hoặc email | Chỉ admin thấy. Dùng để nhận ra khách khi nhập lại file |
-| `max_guests` | ✔ | `0`, `1`, `2` | Số người **đi kèm** tối đa, không tính khách. `0` = chỉ mời một mình. Số nguyên từ 0 đến 20 |
 | `personal_note` | | `"Chúc anh luôn rực rỡ trên hành trình mới!"` | Lời nhắn riêng, hiện thành câu trích dẫn lớn trong thiệp |
 
 ### Ví dụ
 
 ```csv
-name,salutation,group,contact,max_guests,personal_note
-Hữu Tài,Anh,Gia đình,0901234567,1,"Chúc anh luôn rực rỡ trên hành trình mới!"
-Minh Triết,Em,Gia đình,0907654321,2,
-Nguyễn Thị Lan,Cô,Thầy cô,lan@example.com,0,"Em cảm ơn cô, nhờ cô em mới có ngày hôm nay."
+name,salutation,group,contact,personal_note
+Hữu Tài,Anh,Gia đình,0901234567,"Chúc anh luôn rực rỡ trên hành trình mới!"
+Minh Triết,Em,Gia đình,0907654321,
+Nguyễn Thị Lan,Cô,Thầy cô,lan@example.com,"Em cảm ơn cô, nhờ cô em mới có ngày hôm nay."
 ```
 
 ### Lưu ý khi soạn
@@ -179,11 +178,11 @@ Nguyễn Thị Lan,Cô,Thầy cô,lan@example.com,0,"Em cảm ơn cô, nhờ cô
   - Google Sheets: **File → Download → Comma-separated values (.csv)**.
 - Nội dung có **dấu phẩy** phải đặt trong ngoặc kép: `"Chúc em vui, khoẻ"`. Excel và Google Sheets tự làm việc này.
 - Một ô có dấu xuống dòng sẽ làm hỏng file. Viết lời nhắn trên một dòng.
-- Gặp dòng sai (thiếu `name`/`salutation`/`group`, hoặc `max_guests` không phải số 0–20), cả file bị từ chối và trang báo số dòng lỗi. Sửa dòng đó rồi tải lại.
+- Gặp dòng sai (thiếu `name`/`salutation`/`group`), cả file bị từ chối và trang báo số dòng lỗi. Sửa dòng đó rồi tải lại.
 
 ### Nhập lại file có sao không?
 
-- Khách trùng **cả `name` lẫn `contact`** với khách đã có: được **cập nhật** (danh xưng, nhóm, số người đi kèm, lời nhắn). **Link mời giữ nguyên**, nên có thể sửa file và nhập lại thoải mái.
+- Khách trùng **cả `name` lẫn `contact`** với khách đã có: được **cập nhật** (danh xưng, nhóm, lời nhắn). **Link mời giữ nguyên**, nên có thể sửa file và nhập lại thoải mái.
 - Đổi `name` hoặc `contact` của một khách: hệ thống coi là **khách mới** và tạo link mới. Khách cũ vẫn còn, cần xoá tay trong dashboard.
 - Khách **không có `contact`**: mỗi lần nhập là tạo thêm một bản mới. Nên điền `contact` cho mọi người, hoặc chỉ nhập file một lần.
 
@@ -243,6 +242,6 @@ Mỗi khi khách gửi hoặc sửa phản hồi, bạn nhận một tin gồm t
 | Đã sửa biến môi trường nhưng trang không đổi | Chưa **Redeploy** |
 | Đăng nhập báo "Mật khẩu chưa đúng" dù gõ đúng | `ADMIN_PASSWORD` trên Vercel khác với `.env` trên máy, hoặc vừa đổi mà chưa redeploy |
 | Tiếng Việt trong CSV bị lỗi font | Lưu lại file dạng **CSV UTF-8** |
-| Nhập CSV báo "Dòng N không hợp lệ" | Dòng N (tính cả dòng tiêu đề) thiếu `name`/`salutation`/`group`, hoặc `max_guests` không phải số 0–20 |
+| Nhập CSV báo "Dòng N không hợp lệ" | Dòng N (tính cả dòng tiêu đề) thiếu `name`/`salutation`/`group` |
 | Giờ lễ hiển thị lệch | `EVENT_DATE` thiếu `+07:00` |
 | Không nhận được thông báo Telegram | Chưa nhắn **Start** cho bot, sai `TELEGRAM_CHAT_ID`, hoặc thêm biến rồi chưa redeploy |
