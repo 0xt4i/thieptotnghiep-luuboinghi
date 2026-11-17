@@ -20,7 +20,7 @@ export function DeleteGuestButton({ guestId, guestName }: { guestId: string; gue
     }
     setBusy(false);
   }
-  return <>{busy && <OperationOverlay label="Đang xóa khách..." />}<button className="rounded-lg border border-red-300 px-2 py-1 text-xs font-semibold text-red-700 disabled:opacity-50" disabled={busy} onClick={remove} type="button">{busy ? "Đang xóa..." : "Xóa"}</button></>;
+  return <>{busy && <OperationOverlay label="Đang xóa khách..." />}<button className="inline-flex h-8 items-center rounded-lg border border-red-300 px-2 text-xs font-semibold text-red-700 disabled:opacity-50" disabled={busy} onClick={remove} type="button">{busy ? "Đang xóa..." : "Xóa"}</button></>;
 }
 
 export function DeleteAllGuestsButton({ count }: { count: number }) {
