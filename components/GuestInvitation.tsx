@@ -396,7 +396,7 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
 
       <section ref={rsvpRef} id="xac-nhan" data-reveal className="scroll-mt-4 bg-white px-6 py-12 md:px-16 md:py-16">
         <h2 className="font-display text-4xl font-semibold text-navy">Xác nhận tham dự</h2>
-        {!event.pastDeadline && !sent && <p className="mt-2 text-base text-ink/80">Kính mời {recipient} phản hồi trước {event.deadlineLabel}.</p>}
+        {!event.pastDeadline && !sent && <p className="mt-2 text-base text-ink/80">Kính mời {recipient} <span className="font-semibold text-red-700">phản hồi trước {event.deadlineLabel}</span>.</p>}
         {event.pastDeadline ? <div className="mt-5 rounded-xl border border-line bg-cream p-5 text-base leading-7">Thời gian xác nhận đã khép lại. Cảm ơn {recipient} đã dành sự quan tâm cho ngày vui của {event.graduate}.</div>
         : sent ? <div role="status" className="mt-5 rounded-xl border border-emerald-700/30 bg-emerald-50 p-5 text-base leading-7 text-emerald-900">
             <p className="flex items-start gap-2 font-semibold"><CheckCircle2 aria-hidden="true" className="mt-1 h-5 w-5 shrink-0" />Cảm ơn {recipient}! Phản hồi của {guest.salutation} đã được ghi nhận.</p>
