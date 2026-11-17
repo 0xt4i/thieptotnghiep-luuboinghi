@@ -2,7 +2,7 @@
 
 import Image, { type StaticImageData } from "next/image";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Check, CheckCircle2, ChevronDown, Clock, Copy, Info, Loader2, MapPin, Minus, Music, Navigation, Phone, Plus, Quote, VolumeX } from "lucide-react";
+import { Check, CheckCircle2, ChevronDown, Clock, Copy, Info, Loader2, MapPin, Music, Navigation, Phone, Quote, VolumeX } from "lucide-react";
 import Countdown from "@/components/Countdown";
 import graduatePhoto from "@/public/graduate-photo.webp";
 
@@ -87,7 +87,6 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
   const [coverVisible, setCoverVisible] = useState(true);
   const [musicOn, setMusicOn] = useState(false);
   const [status, setStatus] = useState(guest.rsvp?.status || "");
-  const [companions, setCompanions] = useState(guest.rsvp?.companions || 0);
   const [message, setMessage] = useState(guest.rsvp?.message || "");
   const [contact, setContact] = useState(guest.contact || "");
   const [pending, setPending] = useState(false);
@@ -268,7 +267,7 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
     setError("");
     setPending(true);
     try {
-      const response = await fetch("/api/rsvp", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ token, status, companions: status === "ATTENDING" ? companions : 0, contact, message, honeypot: "" }) });
+      const response = await fetch("/api/rsvp", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ token, status, companions: 0, contact, message, honeypot: "" }) });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) setError(data.error || "Không thể gửi phản hồi. Vui lòng thử lại.");
       else setSent(true);
@@ -416,14 +415,6 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
                 </label>)}
               </div>
             </fieldset>
-            {status === "ATTENDING" && <div>
-              <p className="text-base font-semibold" id="companions-label">Số người đi cùng {guest.salutation}</p>
-              <div className="mt-2 flex items-center gap-3" role="group" aria-labelledby="companions-label">
-                <button type="button" aria-label="Bớt một người" onClick={() => setCompanions(Math.max(0, companions - 1))} disabled={companions === 0} className={`flex h-11 w-11 items-center justify-center rounded-full border border-navy text-navy transition disabled:opacity-40 ${focusRing}`}><Minus aria-hidden="true" className="h-5 w-5" /></button>
-                <output aria-live="polite" className="w-8 text-center text-xl font-bold">{companions}</output>
-                <button type="button" aria-label="Thêm một người" onClick={() => setCompanions(companions + 1)} className={`flex h-11 w-11 items-center justify-center rounded-full border border-navy text-navy transition ${focusRing}`}><Plus aria-hidden="true" className="h-5 w-5" /></button>
-              </div>
-            </div>}
             <div>
               <label className="block text-base font-semibold" htmlFor="contact">Số điện thoại {status === "ATTENDING" && <span className="text-red-700">*</span>} {status !== "ATTENDING" && <span className="font-normal text-muted"></span>}</label>
               <input id="contact" className="mt-2 block w-full rounded-xl border border-line bg-white p-3 text-base outline-none transition focus:border-accent focus:ring-2 focus:ring-accent/20" type="tel" inputMode="tel" maxLength={20} value={contact} onChange={e => setContact(e.target.value)} placeholder="Nhập số điện thoại" required={status === "ATTENDING"} />

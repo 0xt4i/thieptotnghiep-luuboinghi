@@ -1,0 +1,2 @@
+ALTER TABLE "Guest"
+ADD COLUMN "messageSent" BOOLEAN NOT NULL DEFAULT false;

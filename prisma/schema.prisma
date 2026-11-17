@@ -16,6 +16,7 @@ model Guest {
   contact       String?
   personalNote  String?
   checkedIn     Boolean  @default(false)
+  messageSent   Boolean  @default(false)
   createdAt     DateTime @default(now())
   rsvp          Rsvp?
 }

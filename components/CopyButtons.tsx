@@ -4,7 +4,7 @@ import { useState } from "react";
 
 export default function CopyButtons({ link, name, salutation }: { link: string; name: string; salutation: string }) {
   const [copied, setCopied] = useState("");
-  const invitation = `Kính mời ${salutation} ${name} đến chung vui trong lễ tốt nghiệp của Lưu Bội Nghi. Vui lòng xác nhận tham dự tại: ${link}`;
+  const invitation = `Thân mời ${salutation} ${name} đến dự lễ tốt nghiệp của Ngiluu nhé! Vui lòng xác nhận tham dự tại: ${link}`;
   async function copy(value: string, label: string) {
     await navigator.clipboard.writeText(value);
     setCopied(label);

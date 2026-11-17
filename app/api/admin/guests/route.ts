@@ -11,6 +11,10 @@ export async function POST(request: Request) {
     const guest = await db.guest.update({ where: { id: body.guestId }, data: { checkedIn: body.checkedIn }, select: { id: true, checkedIn: true } });
     return NextResponse.json({ ok: true, guest });
   }
+  if (typeof body?.messageSent === "boolean" && typeof body?.guestId === "string") {
+    const guest = await db.guest.update({ where: { id: body.guestId }, data: { messageSent: body.messageSent }, select: { id: true, messageSent: true } });
+    return NextResponse.json({ ok: true, guest });
+  }
   const parsed = guestSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "Vui lòng nhập đủ tên, danh xưng và nhóm khách." }, { status: 400 });
 
@@ -35,6 +39,14 @@ export async function PATCH(request: Request) {
     if (!note.success) return NextResponse.json({ error: "Lời nhắn không hợp lệ." }, { status: 400 });
     const result = await db.guest.updateMany({ data: { personalNote: note.data || null } });
     return NextResponse.json({ ok: true, count: result.count });
+  }
+  if (typeof body?.checkedIn === "boolean" && typeof body?.guestId === "string") {
+    const guest = await db.guest.update({ where: { id: body.guestId }, data: { checkedIn: body.checkedIn }, select: { id: true, checkedIn: true } });
+    return NextResponse.json({ ok: true, guest });
+  }
+  if (typeof body?.messageSent === "boolean" && typeof body?.guestId === "string") {
+    const guest = await db.guest.update({ where: { id: body.guestId }, data: { messageSent: body.messageSent }, select: { id: true, messageSent: true } });
+    return NextResponse.json({ ok: true, guest });
   }
   const guestId = typeof body?.guestId === "string" ? body.guestId : "";
   const parsed = guestSchema.safeParse(body);
