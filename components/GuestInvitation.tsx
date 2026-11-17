@@ -2,7 +2,7 @@
 
 import Image, { type StaticImageData } from "next/image";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { Check, CheckCircle2, Clock, Copy, Info, Loader2, MapPin, Minus, Music, Navigation, Phone, Plus, Quote, VolumeX } from "lucide-react";
+import { Check, CheckCircle2, ChevronDown, Clock, Copy, Info, Loader2, MapPin, Minus, Music, Navigation, Phone, Plus, Quote, VolumeX } from "lucide-react";
 import Countdown from "@/components/Countdown";
 import graduatePhoto from "@/public/graduate-photo.webp";
 
@@ -20,6 +20,7 @@ type Props = {
     name: string;
     graduate: string;
     date: string;
+    deadline: string;
     dateLabel: string;
     deadlineLabel: string;
     venue: string;
@@ -27,6 +28,7 @@ type Props = {
     mapsUrl: string;
     notes: string;
     phone: string;
+    contacts: Array<{ name: string; phone: string }>;
     pastDeadline: boolean;
     calendarUrl: string;
     photoUrl: string;
@@ -93,6 +95,7 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
   const [error, setError] = useState("");
   const [copied, setCopied] = useState<"" | "ok" | "fail">("");
   const [rsvpInView, setRsvpInView] = useState(false);
+  const [canScrollDown, setCanScrollDown] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const musicOnRef = useRef(false);
   const resumeMusicRef = useRef(false);
@@ -188,6 +191,21 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
     return () => observer.disconnect();
   }, [opened]);
 
+  useEffect(() => {
+    if (!opened) return;
+    const updateScrollHint = () => {
+      const remaining = document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
+      setCanScrollDown(remaining > 80);
+    };
+    updateScrollHint();
+    window.addEventListener("scroll", updateScrollHint, { passive: true });
+    window.addEventListener("resize", updateScrollHint);
+    return () => {
+      window.removeEventListener("scroll", updateScrollHint);
+      window.removeEventListener("resize", updateScrollHint);
+    };
+  }, [opened]);
+
   // The invitation mounts underneath while the cover splits into two doors; the cover unmounts once they have swung away.
   async function openInvitation() {
     if (opened) return;
@@ -267,13 +285,13 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
     const hidden = side === "right" && !opened;
     return <section ref={side === "left" ? coverFrameRef : undefined} aria-hidden={side === "right" || undefined}className={`flex min-h-[calc(100dvh-1.5rem)] items-stretch rounded-[2rem] border border-gold/50 bg-navy p-5 shadow-2xl sm:min-h-[680px] ${opened ? `door ${door}` : ""} ${hidden ? "invisible" : ""}`}>
       <button type="button" onClick={openInvitation} disabled={opened} className={`relative flex w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[1.5rem] border border-gold/40 px-6 py-14 text-center ${focusRingDark}`}>
-        <Image src="/boinghi_phu.png" alt="" width={240} height={180} className="pointer-events-none absolute left-1/2 top-3 z-0 h-auto w-[43%] max-w-[220px] -translate-x-1/2 object-contain" />
-        <Image src="/xaxiu.png" alt="" width={180} height={260} className="pointer-events-none absolute bottom-12 left-0 z-0 h-auto w-[27%] max-w-[150px] object-contain object-bottom" />
-        <Image src="/sami.png" alt="" width={180} height={260} className="pointer-events-none absolute bottom-8 right-0 z-0 h-auto w-[28%] max-w-[155px] object-contain object-bottom" />
+        <Image src="/boinghi_phu.png" alt="" width={240} height={180} className="pointer-events-none absolute left-1/2 top-0 z-0 h-auto w-[52%] max-w-[240px] -translate-x-1/2 object-contain" />
+        <Image src="/xaxiu.png" alt="" width={180} height={260} className="pointer-events-none absolute bottom-2 left-1 z-0 h-auto w-[30%] max-w-[160px] object-contain object-bottom" />
+        <Image src="/sami.png" alt="" width={180} height={260} className="pointer-events-none absolute bottom-2 right-1 z-0 h-auto w-[30%] max-w-[160px] object-contain object-bottom" />
         <span className={`relative z-10 mx-auto mt-28 block w-full max-w-[310px] rounded-lg border border-[#032B3A] bg-[linear-gradient(135deg,#F6E2B3_0%,#E7C888_50%,#D4AE6A_100%)] p-6 text-[#032B3A] shadow-xl transition-transform duration-300 ease-out rotate-0`}>
           <span className="block border border-[#032B3A]/50 px-4 py-10">
             <span className="block font-display text-lg">Thân mời tốt nghiệp</span>
-            <span className="mt-6 block font-display text-3xl font-semibold leading-tight">{recipient}</span>
+            <span className="mt-6 block break-words font-display text-[clamp(1.5rem,7vw,1.875rem)] font-semibold leading-tight">{recipient}</span>
             <span aria-hidden="true" className="mx-auto mt-5 block h-px w-20 bg-[#032B3A]" />
             <span className="mt-5 block text-[13px] font-semibold uppercase tracking-[.18em] text-[#032B3A]">{coverGraduate}</span>
           </span>
@@ -317,12 +335,12 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
             <div className="mx-auto hidden h-24 w-64 items-center justify-center rounded-2xl border-2 border-gold bg-white px-5 py-3 shadow-[0_12px_30px_rgba(0,0,0,.24)] lg:ml-0 lg:flex">
               <Image src="/logo.svg" alt="" width={240} height={86} className="h-full w-full object-contain" />
             </div>
-            <div className="mt-4 flex items-baseline gap-2 whitespace-nowrap lg:mt-10">
-              <p className="font-display text-xl italic text-gold">Trân trọng kính mời</p>
-              <h1 className="font-sans font-semibold leading-[1.1] tracking-[-.02em]">
-                {guest.salutation && <span className="font-display text-xl italic text-gold">{guest.salutation} </span>}
-                <span className="text-[2.125rem] md:text-5xl lg:text-6xl">{guest.name}</span>
-              </h1>
+            <div className="mt-4 max-w-full lg:mt-10">
+              <p className="flex flex-wrap items-baseline justify-center gap-x-2 gap-y-1 font-display text-xl italic text-gold lg:justify-start">
+                <span>Trân trọng kính mời</span>
+                {guest.salutation && <span>{guest.salutation}</span>}
+              </p>
+              <h1 className="mt-1 break-words font-sans text-[clamp(1.875rem,8vw,3.75rem)] font-semibold leading-[1.1] tracking-[-.02em]">{guest.name}</h1>
             </div>
             <p className="mt-3 text-base text-cream/85 lg:text-lg">đến chung vui trong ngày tốt nghiệp của</p>
             <h2 className="mt-1 font-display text-3xl font-semibold text-gold md:text-4xl">{event.graduate}</h2>
@@ -343,6 +361,11 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
         </figure>
       </section>}
 
+      {canScrollDown && <button type="button" onClick={() => window.scrollBy({ top: Math.max(window.innerHeight * 0.75, 320), behavior: smoothBehavior() })} className={`fixed bottom-20 left-1/2 z-40 flex -translate-x-1/2 items-center gap-2 rounded-full border border-gold/60 bg-navy/95 px-5 py-3 text-sm font-semibold text-gold shadow-lg backdrop-blur transition hover:bg-navy md:bottom-5 ${focusRingDark}`} aria-label="Cuộn xuống để xem thêm">
+        <span>Vuốt xuống để xem thêm</span>
+        <ChevronDown aria-hidden="true" className="h-5 w-5 animate-bounce" />
+      </button>}
+
       <section data-reveal className="bg-navy px-6 py-10 text-center text-cream md:px-16 md:py-12">
         <Countdown date={event.date} graduate={event.graduate} recipient={recipient} />
       </section>
@@ -360,6 +383,11 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
             <span className="sr-only" aria-live="polite">{copied === "ok" ? "Đã sao chép địa chỉ" : ""}</span>
           </DetailRow>
           <DetailRow icon={<Info className="h-5 w-5" />} label="Lưu ý">{event.notes}</DetailRow>
+          <DetailRow icon={<Phone className="h-5 w-5" />} label="Liên hệ">
+            <div className="grid gap-1">
+              {event.contacts.map(contact => <a className="font-semibold text-blue-700 underline-offset-2 hover:underline" href={`tel:${contact.phone.replace(/[^\d+]/g, "")}`} key={contact.phone}>{contact.phone} <span className="font-normal text-ink/80">({contact.name})</span></a>)}
+            </div>
+          </DetailRow>
         </div>
         <div className="flex flex-wrap gap-3">
           <a className={`inline-flex min-h-11 items-center gap-2 rounded-full bg-navy px-5 text-base font-semibold text-cream transition hover:bg-[#164b7c] ${focusRing}`} href={event.mapsUrl} target="_blank" rel="noreferrer"><Navigation aria-hidden="true" className="h-5 w-5" />Chỉ đường</a>

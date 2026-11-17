@@ -12,7 +12,8 @@ export async function POST(request: Request) {
   const body = await request.json().catch(() => null); const token = typeof body?.token === "string" ? body.token : "";
   const guest = await db.guest.findUnique({ where: { token } });
   if (!guest) return NextResponse.json({ error: "Liên kết thiệp không hợp lệ." }, { status: 404 });
-  if (isPastDeadline()) return NextResponse.json({ error: "Đã quá hạn xác nhận tham dự." }, { status: 400 });
+  const setting = await db.eventSetting.findUnique({ where: { id: 1 }, select: { deadline: true } });
+  if (isPastDeadline(setting?.deadline || event.deadline)) return NextResponse.json({ error: "Đã quá hạn xác nhận tham dự." }, { status: 400 });
   const parsed = rsvpSchema.safeParse(body); if (!parsed.success) return NextResponse.json({ error: "Thông tin RSVP chưa hợp lệ." }, { status: 400 });
   if (parsed.data.honeypot) return NextResponse.json({ ok: true });
   if (parsed.data.status === "ATTENDING" && !/^(?:\+84|0)\d{9,10}$/.test(parsed.data.contact.replace(/[\s.-]/g, ""))) return NextResponse.json({ error: "Vui lòng nhập số điện thoại hợp lệ để xác nhận tham dự." }, { status: 400 });

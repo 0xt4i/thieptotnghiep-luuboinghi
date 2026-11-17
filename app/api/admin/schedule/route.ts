@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { isAdmin } from "@/lib/auth";
 
-const fields = ["familyTime", "friendsTime", "otherTime"] as const;
+const fields = ["familyTime", "familyEnd", "friendsTime", "friendsEnd", "otherTime", "otherEnd"] as const;
 
 export async function PATCH(request: Request) {
   if (!isAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

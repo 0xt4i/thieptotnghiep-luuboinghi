@@ -6,6 +6,8 @@ body { background: #f8f3e8; color: #0f172a; }
 * { box-sizing: border-box; }
 .paper { background: rgba(255,255,255,.82); border: 1px solid rgba(237,211,154,.55); box-shadow: 0 18px 60px rgba(4,57,78,.16); }
 .gold-line { background: linear-gradient(90deg, transparent, #edd39a, transparent); height: 1px; }
+.admin-tools hr { border: 0; border-top: 1px solid rgba(237,211,154,.7); }
+.admin-tools h3 { margin-top: 1.75rem; border-left: 4px solid #edd39a; border-radius: .75rem; background: rgba(248,243,232,.72); padding: .55rem .75rem; }
 @keyframes fade-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 .animate-fade-in { animation: fade-in .4s ease-out both; }
 /* Opening the cover: the card straightens, then splits into two doors that swing away; the invitation then zooms out from the card (see GuestInvitation). */

@@ -33,6 +33,22 @@ model Rsvp {
 model EventSchedule {
   id          Int    @id @default(1)
   familyTime  String?
+  familyEnd   String?
   friendsTime String?
+  friendsEnd  String?
   otherTime   String?
+  otherEnd    String?
+}
+
+model EventContact {
+  id        String @id @default(cuid())
+  name      String
+  phone     String
+  sortOrder Int    @default(0)
+  createdAt DateTime @default(now())
+}
+
+model EventSetting {
+  id       Int    @id @default(1)
+  deadline String
 }

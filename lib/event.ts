@@ -8,10 +8,23 @@ export const event = {
   deadline: process.env.RSVP_DEADLINE || "2026-11-21T23:59:59+07:00",
   notes: process.env.EVENT_NOTES || "Dress code: Trắng, Kem, Be",
   phone: process.env.GRADUATE_PHONE || "0399581679",
+  contacts: [
+    { name: "Thục Mẫn", phone: process.env.EVENT_CONTACT_1 || "0905.002.738" },
+    { name: "Hữu Tài", phone: process.env.EVENT_CONTACT_2 || "0707.235.370" },
+  ],
   photoUrl: process.env.GRADUATE_PHOTO_URL || "/boinghi_chinh.JPEG",
   musicUrl: process.env.GRADUATION_MUSIC_URL || "/graduation-music.mp3",
 };
 export function formatDate(value: string | Date) { const parts = Object.fromEntries(new Intl.DateTimeFormat("vi-VN", { weekday: "long", day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Asia/Ho_Chi_Minh" }).formatToParts(new Date(value)).map(part => [part.type, part.value])); const weekday = parts.weekday.charAt(0).toUpperCase() + parts.weekday.slice(1); return `${parts.hour}:${parts.minute} · ${weekday}, ${parts.day}/${parts.month}/${parts.year}`; }
-export function isPastDeadline() { return Date.now() > new Date(event.deadline).getTime(); }
+export function formatScheduleRange(start: string, end?: string | null) {
+  const startDate = new Date(start);
+  const time = (value: Date) => {
+    const parts = Object.fromEntries(new Intl.DateTimeFormat("vi-VN", { hour: "2-digit", minute: "2-digit", hour12: false, timeZone: "Asia/Ho_Chi_Minh" }).formatToParts(value).map(part => [part.type, part.value]));
+    return `${parts.hour}:${parts.minute}`;
+  };
+  const endLabel = end ? ` - ${time(new Date(end))}` : "";
+  return `${time(startDate)}${endLabel} · ${formatDate(startDate).split(" · ")[1]}`;
+}
+export function isPastDeadline(deadline = event.deadline) { return Date.now() > new Date(deadline).getTime(); }
 export function calendarUrl() { const start = new Date(event.date); const end = new Date(start.getTime() + 3 * 60 * 60 * 1000); const f = (d: Date) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, ""); return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.name)}&dates=${f(start)}/${f(end)}&location=${encodeURIComponent(event.address)}&details=${encodeURIComponent(event.notes)}`; }
 export function icsContent() { const start = new Date(event.date); const end = new Date(start.getTime() + 3 * 60 * 60 * 1000); const f = (d: Date) => d.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}/, ""); return `BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nDTSTART:${f(start)}\r\nDTEND:${f(end)}\r\nSUMMARY:${event.name}\r\nLOCATION:${event.address}\r\nDESCRIPTION:${event.notes}\r\nEND:VEVENT\r\nEND:VCALENDAR`; }
