@@ -285,10 +285,10 @@ export default function GuestInvitation({ token, guest, guestbook, event }: Prop
     const hidden = side === "right" && !opened;
     return <section ref={side === "left" ? coverFrameRef : undefined} aria-hidden={side === "right" || undefined}className={`flex min-h-[calc(100dvh-1.5rem)] items-stretch rounded-[2rem] border border-gold/50 bg-navy p-5 shadow-2xl sm:min-h-[680px] ${opened ? `door ${door}` : ""} ${hidden ? "invisible" : ""}`}>
       <button type="button" onClick={openInvitation} disabled={opened} className={`relative flex w-full cursor-pointer flex-col items-center justify-center overflow-hidden rounded-[1.5rem] border border-gold/40 px-6 py-14 text-center ${focusRingDark}`}>
-        <Image src="/boinghi_phu.png" alt="" width={240} height={180} className="pointer-events-none absolute left-1/2 top-0 z-0 h-auto w-[52%] max-w-[240px] -translate-x-1/2 object-contain" />
+        <Image src="/boinghi_phu.png" alt="" width={240} height={180} className="pointer-events-none absolute left-1/2 top-0 z-0 h-auto w-[min(100%,310px)] max-w-[310px] -translate-x-1/2 object-contain" />
         <Image src="/xaxiu.png" alt="" width={180} height={260} className="pointer-events-none absolute bottom-2 left-1 z-0 h-auto w-[30%] max-w-[160px] object-contain object-bottom" />
         <Image src="/sami.png" alt="" width={180} height={260} className="pointer-events-none absolute bottom-2 right-1 z-0 h-auto w-[30%] max-w-[160px] object-contain object-bottom" />
-        <span className={`relative z-10 mx-auto mt-28 block w-full max-w-[310px] rounded-lg border border-[#032B3A] bg-[linear-gradient(135deg,#F6E2B3_0%,#E7C888_50%,#D4AE6A_100%)] p-6 text-[#032B3A] shadow-xl transition-transform duration-300 ease-out rotate-0`}>
+        <span className={`relative z-10 mx-auto mt-[15rem] block w-full max-w-[310px] rounded-lg border border-[#032B3A] bg-[linear-gradient(135deg,#F6E2B3_0%,#E7C888_50%,#D4AE6A_100%)] p-6 text-[#032B3A] shadow-xl transition-transform duration-300 ease-out rotate-0`}>
           <span className="block border border-[#032B3A]/50 px-4 py-10">
             <span className="block font-display text-lg">Thân mời tốt nghiệp</span>
             <span className="mt-6 block break-words font-display text-[clamp(1.5rem,7vw,1.875rem)] font-semibold leading-tight">{recipient}</span>

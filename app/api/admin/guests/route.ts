@@ -7,6 +7,10 @@ import { guestSchema, personalNoteSchema } from "@/lib/validation";
 export async function POST(request: Request) {
   if (!isAdmin()) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const body = await request.json().catch(() => null);
+  if (typeof body?.checkedIn === "boolean" && typeof body?.guestId === "string") {
+    const guest = await db.guest.update({ where: { id: body.guestId }, data: { checkedIn: body.checkedIn }, select: { id: true, checkedIn: true } });
+    return NextResponse.json({ ok: true, guest });
+  }
   const parsed = guestSchema.safeParse(body);
   if (!parsed.success) return NextResponse.json({ error: "Vui lòng nhập đủ tên, danh xưng và nhóm khách." }, { status: 400 });
 
