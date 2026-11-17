@@ -6,7 +6,7 @@ function OperationOverlay({ label }: { label: string }) {
   return <div className="fixed inset-0 z-50 flex items-center justify-center bg-navy/70 p-6" role="status" aria-live="polite" aria-label={label}><div className="rounded-2xl bg-white px-8 py-7 text-center shadow-2xl"><div className="mx-auto h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-gold" /><p className="mt-4 text-lg font-bold text-navy">{label}</p><p className="mt-1 text-sm text-slate-600">Vui lòng chờ, không thao tác trên trang.</p></div></div>;
 }
 
-export function DeleteGuestButton({ guestId, guestName }: { guestId: string; guestName: string }) {
+export function DeleteGuestButton({ guestId, guestName, disabled = false }: { guestId: string; guestName: string; disabled?: boolean }) {
   const [busy, setBusy] = useState(false);
   async function remove() {
     if (!window.confirm(`Xóa khách "${guestName}" và RSVP của khách này?`)) return;
@@ -20,7 +20,7 @@ export function DeleteGuestButton({ guestId, guestName }: { guestId: string; gue
     }
     setBusy(false);
   }
-  return <>{busy && <OperationOverlay label="Đang xóa khách..." />}<button className="inline-flex h-8 items-center rounded-lg border border-red-300 px-2 text-xs font-semibold text-red-700 disabled:opacity-50" disabled={busy} onClick={remove} type="button">{busy ? "Đang xóa..." : "Xóa"}</button></>;
+  return <>{busy && <OperationOverlay label="Đang xóa khách..." />}<button className="inline-flex h-8 items-center rounded-lg border border-red-300 px-2 text-xs font-semibold text-red-700 disabled:opacity-50" disabled={busy || disabled} onClick={remove} type="button">{busy ? "Đang xóa..." : "Xóa"}</button></>;
 }
 
 export function DeleteAllGuestsButton({ count }: { count: number }) {

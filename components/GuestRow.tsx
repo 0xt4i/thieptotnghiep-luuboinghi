@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import CopyButtons from "@/components/CopyButtons";
 import { DeleteGuestButton } from "@/components/DeleteButtons";
 
@@ -16,10 +17,12 @@ type Guest = {
 };
 
 export default function GuestRow({ guest, link, qr, index }: { guest: Guest; link: string; qr: string; index: number }) {
+  const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [messageSent, setMessageSent] = useState(guest.messageSent);
+  const [messageSaving, setMessageSaving] = useState(false);
 
   async function save(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -57,6 +60,9 @@ export default function GuestRow({ guest, link, qr, index }: { guest: Guest; lin
   async function toggleMessageSent() {
     const nextValue = !messageSent;
     setMessageSent(nextValue);
+    setMessageSaving(true);
+    const change = new CustomEvent("guest-message-status", { detail: { delta: nextValue ? 1 : -1 } });
+    window.dispatchEvent(change);
     try {
       const response = await fetch("/api/admin/guests", {
         method: "PATCH",
@@ -66,11 +72,17 @@ export default function GuestRow({ guest, link, qr, index }: { guest: Guest; lin
       const result = await response.json().catch(() => ({}));
       if (!response.ok) {
         setMessageSent(!nextValue);
+        window.dispatchEvent(new CustomEvent("guest-message-status", { detail: { delta: nextValue ? -1 : 1 } }));
         window.alert(result.error || "Không thể lưu trạng thái tin nhắn. Hãy chạy migration database rồi thử lại.");
+        return;
       }
+      router.refresh();
     } catch {
       setMessageSent(!nextValue);
+      window.dispatchEvent(new CustomEvent("guest-message-status", { detail: { delta: nextValue ? -1 : 1 } }));
       window.alert("Không kết nối được máy chủ. Vui lòng thử lại.");
+    } finally {
+      setMessageSaving(false);
     }
   }
 
@@ -82,8 +94,8 @@ export default function GuestRow({ guest, link, qr, index }: { guest: Guest; lin
       <td className="px-4 py-4">{guest.group}</td>
       <td className="px-4 py-4">{guest.rsvp?.status === "ATTENDING" ? "Sẽ tham dự" : guest.rsvp?.status === "DECLINED" ? "Không tham dự" : guest.rsvp?.status === "MAYBE" ? "Chưa chắc chắn" : "Chưa phản hồi"}</td>
       <td className="max-w-xs px-4 py-4">{guest.rsvp?.message || "—"}{guest.rsvp?.updatedAt && <div className="mt-1 text-xs text-slate-400">{new Date(guest.rsvp.updatedAt).toLocaleString("vi-VN")}</div>}</td>
-      <td className="px-4 py-4 text-center"><label className={`inline-flex cursor-pointer items-center gap-1 rounded-lg border px-2 py-1 text-xs font-semibold ${messageSent ? "border-emerald-300 bg-emerald-50 text-emerald-700" : "border-slate-300 text-slate-600"}`}><input className="h-4 w-4 accent-emerald-600" type="checkbox" checked={messageSent} onChange={toggleMessageSent} />{messageSent ? "Đã gửi" : "Chưa gửi"}</label></td>
-      <td className="px-4 py-4"><img src={qr} alt={`QR ${guest.name}`} /><a className="break-all text-xs text-blue-700" href={link}>{link}</a><div className="mt-2 flex flex-wrap items-center gap-1"><CopyButtons link={link} name={guest.name} salutation={guest.salutation} /><button className="inline-flex h-8 items-center rounded-lg border border-blue-300 px-2 text-xs font-semibold text-blue-700" onClick={() => setEditing(value => !value)} type="button">{editing ? "Đóng sửa" : "Sửa trực tiếp"}</button><DeleteGuestButton guestId={guest.id} guestName={`${guest.salutation} ${guest.name}`} /></div></td>
+      <td className="px-4 py-4 text-center"><label className={`inline-flex items-center gap-1 rounded-lg border px-2 py-1 text-xs font-semibold ${messageSaving ? "cursor-wait border-amber-300 bg-amber-50 text-amber-700" : messageSent ? "cursor-pointer border-emerald-300 bg-emerald-50 text-emerald-700" : "cursor-pointer border-slate-300 text-slate-600"}`}><input className="h-4 w-4 accent-emerald-600" disabled={messageSaving} type="checkbox" checked={messageSent} onChange={toggleMessageSent} />{messageSaving ? "Đang cập nhật..." : messageSent ? "Đã gửi" : "Chưa gửi"}</label></td>
+      <td className={`px-4 py-4 ${messageSaving ? "pointer-events-none opacity-60" : ""}`}><img src={qr} alt={`QR ${guest.name}`} /><a className="break-all text-xs text-blue-700" href={link}>{link}</a><div className="mt-2 flex flex-wrap items-center gap-1"><CopyButtons disabled={messageSaving} link={link} name={guest.name} salutation={guest.salutation} /><button className="inline-flex h-8 items-center rounded-lg border border-blue-300 px-2 text-xs font-semibold text-blue-700 disabled:cursor-not-allowed disabled:opacity-50" disabled={messageSaving} onClick={() => setEditing(value => !value)} type="button">{editing ? "Đóng sửa" : "Sửa trực tiếp"}</button><DeleteGuestButton disabled={messageSaving} guestId={guest.id} guestName={`${guest.salutation} ${guest.name}`} /></div></td>
     </tr>
     {editing && <tr className="border-b border-slate-100 bg-blue-50/40">
       <td className="px-4 py-4" colSpan={7}>
